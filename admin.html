@@ -827,8 +827,8 @@ async function loadBanners() {
       <td>${b.order_index ?? '—'}</td>
       <td>${b.active ? '<span class="badge badge-green">Sim</span>' : '<span class="badge badge-gray">Não</span>'}</td>
       <td><div class="table-actions">
-        <button class="btn btn-ghost btn-xs" onclick="editItem('banners',${b.id})">Editar</button>
-        <button class="btn btn-danger btn-xs" onclick="confirmDelete('banners',${b.id},'${esc(b.title)}')">Excluir</button>
+        <button class="btn btn-ghost btn-xs" onclick="editItem('banners','${b.id}')">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('banners','${b.id}','${esc(b.title)}')">Excluir</button>
       </div></td>
     </tr>`).join('');
 }
@@ -893,8 +893,8 @@ async function loadBlog() {
       <td>${blogStatusBadge(p.status)}</td>
       <td>${p.published_at ? fmtDate(p.published_at) : '—'}</td>
       <td><div class="table-actions">
-        <button class="btn btn-ghost btn-xs" onclick="editItem('blog',${p.id})">Editar</button>
-        <button class="btn btn-danger btn-xs" onclick="confirmDelete('blog',${p.id},'${esc(p.title)}')">Excluir</button>
+        <button class="btn btn-ghost btn-xs" onclick="editItem('blog','${p.id}')">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('blog','${p.id}','${esc(p.title)}')">Excluir</button>
       </div></td>
     </tr>`).join('');
 }
@@ -955,8 +955,8 @@ async function loadVagas() {
       <td>${vagaStatusBadge(v.status)}</td>
       <td>${v.featured?'<span class="badge badge-orange">Sim</span>':'<span class="badge badge-gray">Não</span>'}</td>
       <td><div class="table-actions">
-        <button class="btn btn-ghost btn-xs" onclick="editItem('vagas',${v.id})">Editar</button>
-        <button class="btn btn-danger btn-xs" onclick="confirmDelete('vagas',${v.id},'${esc(v.title)}')">Excluir</button>
+        <button class="btn btn-ghost btn-xs" onclick="editItem('vagas','${v.id}')">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('vagas','${v.id}','${esc(v.title)}')">Excluir</button>
       </div></td>
     </tr>`).join('');
 }
@@ -1100,8 +1100,8 @@ async function loadVideos() {
       <td>${v.status==='published'?'<span class="badge badge-green">Publicado</span>':'<span class="badge badge-yellow">Rascunho</span>'}</td>
       <td>${v.order_index??'—'}</td>
       <td><div class="table-actions">
-        <button class="btn btn-ghost btn-xs" onclick="editItem('videos',${v.id})">Editar</button>
-        <button class="btn btn-danger btn-xs" onclick="confirmDelete('videos',${v.id},'${esc(v.title)}')">Excluir</button>
+        <button class="btn btn-ghost btn-xs" onclick="editItem('videos','${v.id}')">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('videos','${v.id}','${esc(v.title)}')">Excluir</button>
       </div></td>
     </tr>`).join('');
 }
@@ -1163,8 +1163,8 @@ async function loadDepoimentos() {
       <td>${d.active?'<span class="badge badge-green">Sim</span>':'<span class="badge badge-gray">Não</span>'}</td>
       <td>${d.order_index??'—'}</td>
       <td><div class="table-actions">
-        <button class="btn btn-ghost btn-xs" onclick="editItem('depoimentos',${d.id})">Editar</button>
-        <button class="btn btn-danger btn-xs" onclick="confirmDelete('depoimentos',${d.id},'${esc(d.name)}')">Excluir</button>
+        <button class="btn btn-ghost btn-xs" onclick="editItem('depoimentos','${d.id}')">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('depoimentos','${d.id}','${esc(d.name)}')">Excluir</button>
       </div></td>
     </tr>`).join('');
 }
@@ -1226,8 +1226,8 @@ async function loadProdutos() {
       <td>${p.active?'<span class="badge badge-green">Sim</span>':'<span class="badge badge-gray">Não</span>'}</td>
       <td>${p.order_index??'—'}</td>
       <td><div class="table-actions">
-        <button class="btn btn-ghost btn-xs" onclick="editItem('produtos',${p.id})">Editar</button>
-        <button class="btn btn-danger btn-xs" onclick="confirmDelete('produtos',${p.id},'${esc(p.name)}')">Excluir</button>
+        <button class="btn btn-ghost btn-xs" onclick="editItem('produtos','${p.id}')">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('produtos','${p.id}','${esc(p.name)}')">Excluir</button>
       </div></td>
     </tr>`).join('');
 }
@@ -1325,7 +1325,7 @@ async function loadFotos() {
       <div class="photo-card-body">
         <div class="photo-caption">${esc(f.caption||'Sem legenda')}</div>
         <div class="photo-order">Ordem: ${f.order_index??0}</div>
-        <button class="btn btn-danger btn-xs" onclick="confirmDelete('fotos',${f.id},'foto')">Excluir</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('fotos','${f.id}','foto')">Excluir</button>
       </div>
     </div>`).join('');
 }
