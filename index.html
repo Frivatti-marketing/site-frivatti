@@ -1084,7 +1084,7 @@ function hResetTimer(){
 }
 
 async function loadBanners(){
-  const {data}=await _sb.from('banners').select('*').eq('active',true).order('order_index');
+  const {data}=await _sb.from('banners').select('*').order('order_index');
   if(!data||!data.length) return; // keep static default
   _banners=data;
   _bIdx=0;
