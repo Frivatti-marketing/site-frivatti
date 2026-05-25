@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frivatti — Do campo à mesa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#f5f2eb;color:#1a1a16;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{border:none;cursor:pointer;font-family:inherit}
+
+:root{
+  --r:#e85a0a;
+  --rv:#ff6120;
+  --rd:#c24408;
+  --rg:rgba(232,90,10,.32);
+  --dk:#1a1a16;
+  --dk2:#222220;
+  --sa:#f5f2eb;
+  --sa2:#edeae2;
+  --mu:#7a7a6e;
+  --bo:#d8d4c8;
+  --wh:#ffffff;
+  --fd:'Bricolage Grotesque',sans-serif;
+  --fb:'DM Sans',sans-serif;
+  --ra:6px;
+  --rl:14px;
+}
+
+/* utils */
+.W{max-width:1180px;margin:0 auto;padding:0 48px}
+.lbr{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--rv)}
+.lbk{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.32)}
+.fu{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.fu.vis{opacity:1;transform:none}
+
+/* btns */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:var(--ra);font-family:var(--fd);font-weight:700;font-size:14px;letter-spacing:.2px;transition:all .2s;cursor:pointer;border:none}
+.bp{background:var(--r);color:#fff}.bp:hover{background:var(--rd);transform:translateY(-1px);box-shadow:0 6px 20px var(--rg)}
+.bo2{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.42)}.bo2:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.bdk{background:var(--dk);color:#fff}.bdk:hover{background:var(--dk2)}
+.bgh{background:transparent;color:var(--r);border:1.5px solid var(--r)}.bgh:hover{background:var(--r);color:#fff}
+.bwh{background:#fff;color:var(--r);font-family:var(--fd);font-weight:700}.bwh:hover{background:rgba(255,255,255,.9)}
+
+/* ══ NAV ══ */
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;height:70px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;transition:background .3s,border-bottom .3s;border-bottom:1px solid transparent}
+#nav.sc{background:rgba(26,26,22,.95);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.07)}
+.nl{font-family:var(--fd);font-weight:800;font-size:21px;color:#fff;letter-spacing:-.5px}
+.nl span{color:var(--rv)}
+.nm{display:flex;align-items:center;gap:26px}
+.nm a{color:rgba(255,255,255,.72);font-size:13.5px;transition:color .2s;position:relative}
+.nm a:hover{color:#fff}
+.nm a.hl{color:var(--rv);font-weight:600}
+.nm a::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;background:var(--rv);transform:scaleX(0);transition:transform .2s}
+.nm a:hover::after{transform:scaleX(1)}
+.nr{display:flex;align-items:center;gap:10px}
+.na{padding:8px 16px;border-radius:var(--ra);font-family:var(--fd);font-weight:600;font-size:12px;color:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.16);transition:all .2s}
+.na:hover{color:#fff;border-color:rgba(255,255,255,.45)}
+.nc{padding:9px 20px;border-radius:var(--ra);font-family:var(--fd);font-weight:700;font-size:13px;background:var(--r);color:#fff;transition:background .2s}
+.nc:hover{background:var(--rd)}
+
+/* ══ 1. HERO / BANNER ══ */
+#hero{position:relative;height:100vh;min-height:700px;display:flex;align-items:center;background:#111;overflow:hidden}
+.hbg{position:absolute;inset:0;
+  background-image:url('https://images.unsplash.com/photo-1569597867579-d442f4a37a34?w=1800&q=85');
+  background-size:cover;background-position:center 45%;
+  opacity:.4;animation:hz 16s ease-in-out infinite alternate}
+@keyframes hz{from{transform:scale(1.03)}to{transform:scale(1.07)}}
+.hov{position:absolute;inset:0;background:linear-gradient(140deg,rgba(26,26,22,.92) 0%,rgba(26,26,22,.5) 55%,rgba(232,90,10,.1) 100%)}
+.hcnt{position:relative;z-index:2;padding-top:70px;max-width:800px}
+.hbadge{display:inline-flex;align-items:center;gap:10px;padding:5px 16px 5px 5px;border-radius:20px;background:rgba(232,90,10,.16);border:1px solid rgba(232,90,10,.3);margin-bottom:26px}
+.hbdot{width:22px;height:22px;border-radius:50%;background:var(--rv);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700}
+.hbadge span{font-size:12px;font-weight:500;color:rgba(255,255,255,.82);letter-spacing:.8px}
+.hh1{font-family:var(--fd);font-size:clamp(48px,6.2vw,88px);font-weight:800;letter-spacing:-2.5px;line-height:1.02;color:#fff;margin-bottom:20px}
+.hh1 em{font-style:normal;color:var(--rv)}
+.hp{font-size:17px;color:rgba(255,255,255,.58);line-height:1.75;max-width:540px;margin-bottom:18px}
+
+/* produto pills */
+.hpills{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:36px}
+.hpill{padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600;background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.14);transition:all .2s;cursor:pointer}
+.hpill:hover,.hpill.on{background:var(--r);color:#fff;border-color:var(--r)}
+.hacts{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+
+/* scroll indicator */
+.hscr{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.3);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;animation:sb 2.2s ease-in-out infinite}
+@keyframes sb{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+.hsbar{width:1px;height:42px;background:linear-gradient(to bottom,rgba(255,255,255,.45),transparent)}
+
+/* ══ 2. SOBRE ══ */
+#sobre{background:var(--sa);padding:100px 0}
+.sobre-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.sobre-img{position:relative;border-radius:var(--rl);overflow:hidden;height:520px}
+.sobre-img img{width:100%;height:100%;object-fit:cover}
+.sobre-img-badge{position:absolute;bottom:24px;left:24px;background:var(--r);padding:10px 18px;border-radius:var(--ra);font-family:var(--fd);font-weight:700;font-size:12px;color:#fff}
+.sobre-txt h2{font-family:var(--fd);font-size:38px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin:14px 0 22px}
+.sobre-txt p{font-size:15px;line-height:1.8;color:var(--mu);margin-bottom:18px}
+.sobre-uni{display:flex;flex-direction:column;gap:10px;margin:28px 0}
+.uni-tag{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--ra);border:1px solid var(--bo);background:#fff}
+.uni-dot{width:8px;height:8px;border-radius:50%;background:var(--r);flex-shrink:0}
+.uni-tag span{font-size:13px;font-weight:500;color:var(--dk)}
+.uni-tag .un{font-size:11px;color:var(--mu);margin-left:auto}
+.uni-tag.obra .uni-dot{background:#f0b429}
+
+/* ══ 3. NÚMEROS ══ */
+#nums{background:var(--dk);padding:72px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.nums-g{display:grid;grid-template-columns:repeat(5,1fr)}
+.num-i{padding:0 36px;border-right:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;gap:6px}
+.num-i:last-child{border-right:none}
+.num-n{font-family:var(--fd);font-size:48px;font-weight:800;color:var(--rv);line-height:1;letter-spacing:-2px}
+.num-s{font-size:24px;font-weight:800;color:var(--rv)}
+.num-l{font-size:12.5px;color:rgba(255,255,255,.4);line-height:1.45;max-width:150px}
+
+/* ══ 4. CADEIA PRODUTIVA ══ */
+#cadeia{background:#fff;padding:100px 0;overflow:hidden}
+.cadeia-hdr{text-align:center;margin-bottom:64px}
+.cadeia-hdr h2{font-family:var(--fd);font-size:40px;font-weight:800;letter-spacing:-1px;margin-top:12px}
+.cadeia-hdr p{font-size:15px;color:var(--mu);max-width:520px;margin:14px auto 0;line-height:1.7}
+
+/* timeline horizontal */
+.cadeia-flow{position:relative;display:flex;align-items:flex-start;gap:0;padding:0 48px}
+.cadeia-flow::before{content:'';position:absolute;top:48px;left:calc(48px + 48px);right:calc(48px + 48px);height:2px;background:linear-gradient(90deg,var(--r),var(--rv));z-index:0}
+.cstep{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1;padding:0 12px}
+.cs-ico{width:96px;height:96px;border-radius:50%;background:var(--sa);border:3px solid var(--bo);display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:20px;transition:all .3s;flex-shrink:0}
+.cstep:hover .cs-ico{border-color:var(--r);background:rgba(232,90,10,.08);transform:scale(1.06)}
+.cs-num{position:absolute;top:-2px;right:calc(50% - 56px);width:22px;height:22px;border-radius:50%;background:var(--r);color:#fff;font-family:var(--fd);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.cs-ttl{font-family:var(--fd);font-size:15px;font-weight:700;color:var(--dk);margin-bottom:6px}
+.cs-sub{font-size:12.5px;color:var(--mu);line-height:1.55}
+
+/* ══ 5. CONTROLE DE QUALIDADE ══ */
+#qualidade{background:var(--dk);padding:100px 0;overflow:hidden;position:relative}
+.qbg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1593443320739-77f74939d0da?w=1600&q=80');background-size:cover;background-position:center;opacity:.1}
+.qual-g{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.qual-img{border-radius:var(--rl);overflow:hidden;height:460px;position:relative}
+.qual-img img{width:100%;height:100%;object-fit:cover}
+.qual-img-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,22,.6) 0%,transparent 60%)}
+.qual-txt .lbk{margin-bottom:16px}
+.qual-txt h2{font-family:var(--fd);font-size:38px;font-weight:800;letter-spacing:-1px;color:#fff;line-height:1.1;margin-bottom:20px}
+.qual-txt p{font-size:15px;color:rgba(255,255,255,.5);line-height:1.78;margin-bottom:32px}
+.qual-list{display:flex;flex-direction:column;gap:14px}
+.ql-i{display:flex;align-items:flex-start;gap:14px;padding:16px;border-radius:var(--ra);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+.ql-ico{width:38px;height:38px;border-radius:var(--ra);background:rgba(232,90,10,.18);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ql-txt h4{font-family:var(--fd);font-size:14px;font-weight:700;color:#fff;margin-bottom:3px}
+.ql-txt p{font-size:13px;color:rgba(255,255,255,.42);line-height:1.5}
+
+/* ══ 6. EXPORTAÇÃO ══ */
+#expo{background:var(--sa);padding:100px 0}
+.expo-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.expo-txt h2{font-family:var(--fd);font-size:38px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin:14px 0 20px}
+.expo-txt h2 em{font-style:normal;color:var(--r)}
+.expo-txt p{font-size:15px;color:var(--mu);line-height:1.78;margin-bottom:28px}
+.expo-fs{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.expo-f{display:flex;align-items:center;gap:12px}
+.expo-fic{width:32px;height:32px;border-radius:var(--ra);background:rgba(232,90,10,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.expo-f span{font-size:14px;color:var(--dk)}
+.expo-paises{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+.pais-tag{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:600;background:rgba(232,90,10,.1);color:var(--r);border:1px solid rgba(232,90,10,.2)}
+.expo-form{background:#fff;border:1px solid var(--bo);border-radius:var(--rl);padding:32px;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.expo-form h3{font-family:var(--fd);font-size:18px;font-weight:700;margin-bottom:20px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:11px;font-weight:600;color:var(--mu);margin-bottom:5px;letter-spacing:.5px;text-transform:uppercase}
+.fg input,.fg select,.fg textarea{width:100%;padding:10px 13px;background:var(--sa);border:1.5px solid var(--bo);border-radius:var(--ra);font-family:var(--fb);font-size:14px;color:var(--dk);transition:border-color .2s;outline:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--r)}
+.fg textarea{resize:vertical;min-height:80px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ══ 7. SANTA HELENA ══ */
+#sh{background:var(--dk);padding:100px 0;position:relative;overflow:hidden}
+.shbg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80');background-size:cover;background-position:center;opacity:.09}
+.sh-in{position:relative;z-index:2}
+.sh-top{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-bottom:64px}
+.sh-tl .lbk{margin-bottom:16px}
+.sh-tl h2{font-family:var(--fd);font-size:38px;font-weight:800;letter-spacing:-1px;color:#fff;line-height:1.1;margin-bottom:18px}
+.sh-tl h2 em{font-style:normal;color:var(--rv)}
+.sh-tl p{font-size:15px;color:rgba(255,255,255,.48);line-height:1.78;margin-bottom:24px}
+.sh-prev{display:inline-flex;align-items:center;gap:10px;background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.3);padding:10px 18px;border-radius:var(--ra);font-size:13px;font-weight:600;color:#f0b429}
+.sh-prog{display:flex;flex-direction:column;gap:16px}
+.sh-prog h4{font-family:var(--fd);font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+.sh-pi{display:flex;flex-direction:column;gap:6px}
+.sh-pl{display:flex;justify-content:space-between;font-size:13px;color:rgba(255,255,255,.55)}
+.sh-pl span:last-child{font-family:var(--fd);font-weight:700;color:#fff}
+.sh-pb{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.sh-pf{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--r),var(--rv));width:0;transition:width 1.3s ease}
+
+.sh-fotos{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:52px}
+.sh-f{border-radius:var(--ra);overflow:hidden;height:190px;position:relative}
+.sh-f img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.sh-f:hover img{transform:scale(1.07)}
+.sh-ft{position:absolute;bottom:9px;left:9px;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);padding:3px 10px;border-radius:3px;font-size:11px;color:rgba(255,255,255,.82);font-weight:500}
+
+.sh-difs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.sh-d{padding:22px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--rl);transition:all .2s}
+.sh-d:hover{background:rgba(232,90,10,.08);border-color:rgba(232,90,10,.2)}
+.sh-d-ico{font-size:24px;margin-bottom:10px}
+.sh-d h4{font-family:var(--fd);font-size:14px;font-weight:700;color:#fff;margin-bottom:6px}
+.sh-d p{font-size:12.5px;color:rgba(255,255,255,.38);line-height:1.6}
+
+/* ══ 8. SUINOCULTURA & PRODUTORES ══ */
+#prod{background:var(--sa);padding:100px 0}
+.prod-intro{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-bottom:80px}
+.prod-img{border-radius:var(--rl);overflow:hidden;height:480px;position:relative}
+.prod-img img{width:100%;height:100%;object-fit:cover}
+.prod-img-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,22,.55) 0%,transparent 55%)}
+.prod-txt h2{font-family:var(--fd);font-size:38px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin:14px 0 20px}
+.prod-txt p{font-size:15px;color:var(--mu);line-height:1.78;margin-bottom:28px}
+.prod-bens{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+.pb{padding:14px 16px;border-radius:var(--ra);background:#fff;border:1px solid var(--bo);display:flex;align-items:flex-start;gap:10px}
+.pb-ico{font-size:18px;flex-shrink:0;margin-top:1px}
+.pb h4{font-family:var(--fd);font-size:13px;font-weight:700;margin-bottom:2px}
+.pb p{font-size:12px;color:var(--mu);line-height:1.5}
+
+/* vídeos */
+.prod-vids h3{font-family:var(--fd);font-size:28px;font-weight:800;letter-spacing:-.6px;margin:12px 0 32px}
+.vid-g{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.vc{border-radius:var(--rl);overflow:hidden;background:#fff;border:1px solid var(--bo);transition:all .25s;cursor:pointer}
+.vc:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.14);border-color:transparent}
+.vth{position:relative;height:160px;overflow:hidden}
+.vth img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.vc:hover .vth img{transform:scale(1.06)}
+.vpl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.28)}
+.vpb{width:46px;height:46px;border-radius:50%;background:rgba(232,90,10,.92);display:flex;align-items:center;justify-content:center;transition:transform .2s}
+.vc:hover .vpb{transform:scale(1.1)}
+.vpb svg{width:16px;height:16px;fill:#fff;margin-left:3px}
+.vdu{position:absolute;bottom:8px;right:9px;background:rgba(0,0,0,.7);padding:2px 7px;border-radius:3px;font-size:11px;color:#fff;font-weight:500}
+.vbd{padding:15px}
+.vcat{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--rv);margin-bottom:5px}
+.vbd h4{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--dk);margin-bottom:5px;line-height:1.35}
+.vbd p{font-size:12px;color:var(--mu);line-height:1.5}
+
+/* ══ 9. ÁREA SOCIAL — VAGAS + PROVA SOCIAL ══ */
+#social{background:#fff;padding:100px 0}
+
+/* vagas */
+.social-top{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:52px}
+.social-top h2{font-family:var(--fd);font-size:40px;font-weight:800;letter-spacing:-1px;margin-top:12px}
+.social-top p{font-size:15px;color:var(--mu);line-height:1.75;margin-bottom:22px}
+.vg-list{display:flex;flex-direction:column;gap:10px;margin-bottom:64px}
+.vg-i{padding:20px 24px;border:1.5px solid var(--bo);border-radius:var(--rl);display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;transition:all .2s;cursor:pointer;background:#fff}
+.vg-i:hover{border-color:var(--r);background:rgba(232,90,10,.02);transform:translateX(3px)}
+.vg-t{font-family:var(--fd);font-size:16px;font-weight:700;margin-bottom:7px}
+.vg-tags{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.vg-tg{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;background:var(--sa);color:var(--mu);border:1px solid var(--bo)}
+.vg-tg.lc{color:var(--r);background:rgba(232,90,10,.07);border-color:rgba(232,90,10,.2)}
+.vg-acts{display:flex;align-items:center;gap:9px}
+.vg-new{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(232,90,10,.1);color:var(--r)}
+
+/* prova social */
+.ps-hdr{text-align:center;margin-bottom:48px}
+.ps-hdr h3{font-family:var(--fd);font-size:34px;font-weight:800;letter-spacing:-.8px;margin-top:12px}
+.ps-tabs{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:36px}
+.pstab{padding:9px 22px;border-radius:20px;font-family:var(--fd);font-weight:700;font-size:13px;cursor:pointer;transition:all .2s;border:1.5px solid var(--bo);color:var(--mu);background:#fff}
+.pstab.on{background:var(--r);color:#fff;border-color:var(--r)}
+.ps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.ps-card{padding:26px;border-radius:var(--rl);background:var(--sa);border:1px solid var(--bo);transition:all .2s}
+.ps-card:hover{box-shadow:0 8px 32px rgba(0,0,0,.1);border-color:transparent;transform:translateY(-2px)}
+.ps-stars{color:var(--rv);font-size:14px;margin-bottom:12px}
+.ps-q{font-size:14px;line-height:1.75;color:var(--mu);font-style:italic;margin-bottom:20px}
+.ps-auth{display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--bo)}
+.ps-av{width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid rgba(232,90,10,.22);flex-shrink:0}
+.ps-av img{width:100%;height:100%;object-fit:cover}
+.ps-nm{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--dk)}
+.ps-inf{font-size:12px;color:var(--mu);margin-top:2px}
+
+/* ══ 10. CTA FINAL ══ */
+#cta{background:var(--r);padding:90px 0;text-align:center}
+#cta h2{font-family:var(--fd);font-size:46px;font-weight:800;letter-spacing:-1.5px;color:#fff;margin-bottom:14px}
+#cta h2 em{font-style:normal;color:rgba(255,255,255,.75)}
+#cta p{font-size:16px;color:rgba(255,255,255,.68);margin-bottom:36px}
+.cta-a{display:flex;align-items:center;justify-content:center;gap:14px}
+
+/* ══ FOOTER ══ */
+#ft{background:var(--dk);padding:70px 0 28px}
+.ft-g{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:28px}
+.ft-logo{font-family:var(--fd);font-size:22px;font-weight:800;color:#fff;margin-bottom:13px}
+.ft-logo span{color:var(--rv)}
+.ft-desc{font-size:13px;color:rgba(255,255,255,.37);line-height:1.7;max-width:265px;margin-bottom:20px}
+.ft-socs{display:flex;gap:8px}
+.ft-sc{width:34px;height:34px;border-radius:var(--ra);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(255,255,255,.42);transition:all .2s;border:1px solid rgba(255,255,255,.06)}
+.ft-sc:hover{background:var(--r);color:#fff;border-color:var(--r)}
+.ft-col h4{font-family:var(--fd);font-size:12px;font-weight:700;color:#fff;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.ft-ls{display:flex;flex-direction:column;gap:9px}
+.ft-ls a{font-size:13px;color:rgba(255,255,255,.37);transition:color .2s}
+.ft-ls a:hover{color:#fff}
+.ft-ci{margin-bottom:11px}
+.ft-ci .l{font-size:10px;color:rgba(255,255,255,.26);text-transform:uppercase;letter-spacing:1px}
+.ft-ci .v{font-size:13px;color:rgba(255,255,255,.52);margin-top:2px}
+.ft-bot{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.2)}
+
+/* ══ WA FLOAT ══ */
+#wa{position:fixed;bottom:28px;right:28px;z-index:300;width:54px;height:54px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(37,211,102,.4);cursor:pointer;transition:transform .2s,box-shadow .2s}
+#wa:hover{transform:scale(1.08);box-shadow:0 8px 26px rgba(37,211,102,.5)}
+#wa svg{width:27px;height:27px;fill:#fff}
+
+/* ══ ADMIN ══ */
+#adm{display:none}
+.al{display:flex;height:100vh}
+.asb{width:238px;background:var(--dk);display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.05);flex-shrink:0}
+.asbl{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.05)}
+.asbl .lt{font-family:var(--fd);font-size:18px;font-weight:800;color:#fff}
+.asbl .lt span{color:var(--rv)}
+.asbl .ls{font-size:10px;color:rgba(255,255,255,.26);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.anv{padding:16px 10px;flex:1;overflow-y:auto}
+.ans{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.18);padding:0 10px;margin:14px 0 6px}
+.anv a{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--ra);font-size:13.5px;color:rgba(255,255,255,.47);transition:all .15s;margin-bottom:1px;cursor:pointer}
+.anv a:hover{background:rgba(255,255,255,.05);color:#fff}
+.anv a.ac{background:rgba(232,90,10,.18);color:var(--rv)}
+.anv a svg{width:15px;height:15px;flex-shrink:0}
+.au{padding:13px 16px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:9px}
+.aua{width:32px;height:32px;border-radius:50%;background:var(--r);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.aun{font-size:13px;font-weight:500;color:#fff}
+.aur{font-size:11px;color:rgba(255,255,255,.3)}
+.amn{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--sa)}
+.ahd{padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid var(--bo);flex-shrink:0}
+.ahdt{font-family:var(--fd);font-size:17px;font-weight:700}
+.ahda{display:flex;align-items:center;gap:10px}
+.abtn{padding:8px 16px;border-radius:var(--ra);font-family:var(--fd);font-size:13px;font-weight:700;background:var(--r);color:#fff;transition:background .2s;cursor:pointer}
+.abtn:hover{background:var(--rd)}
+.abd{flex:1;overflow-y:auto;padding:26px}
+.asts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.sc2{background:#fff;border-radius:var(--rl);padding:20px;border:1px solid var(--bo)}
+.scl{font-size:11px;font-weight:600;color:var(--mu);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.scn{font-family:var(--fd);font-size:32px;font-weight:800;color:var(--dk);letter-spacing:-1px;margin-bottom:3px}
+.scd{font-size:12px;color:#2e7a4e;font-weight:500}
+.scd.ng{color:var(--r)}
+.ag2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.acd{background:#fff;border-radius:var(--rl);border:1px solid var(--bo);overflow:hidden}
+.ach{padding:16px 20px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between}
+.ach h3{font-family:var(--fd);font-size:14px;font-weight:700}
+.ach a{font-size:12px;color:var(--r);font-weight:500;cursor:pointer}
+.at{width:100%;border-collapse:collapse}
+.at th{padding:8px 13px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--mu);border-bottom:1px solid var(--bo);background:var(--sa)}
+.at td{padding:10px 13px;font-size:13px;color:var(--dk);border-bottom:1px solid var(--bo)}
+.at tr:last-child td{border-bottom:none}
+.at tr:hover td{background:rgba(232,90,10,.02)}
+.sb2{display:inline-flex;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.sok{background:rgba(46,122,78,.1);color:#2e7a4e}
+.san{background:rgba(184,126,18,.1);color:#b87e12}
+.senc{background:rgba(120,120,110,.1);color:var(--mu)}
+.apc{display:flex;flex-direction:column;flex:1;overflow:hidden}
+
+/* candidatos */
+.cpan{display:grid;grid-template-columns:1fr 340px;gap:16px;height:100%;overflow:hidden;padding:18px}
+.cla{overflow-y:auto}
+.cdr{background:#fff;border-radius:var(--rl);border:1px solid var(--bo);overflow-y:auto;padding:24px}
+.drn{font-family:var(--fd);font-size:20px;font-weight:800;margin-bottom:4px}
+.drv{font-size:13px;color:var(--mu);margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bo)}
+.drs{margin-bottom:16px}
+.drs h4{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--mu);margin-bottom:8px}
+.drf{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}
+.drf .l{font-size:11px;color:var(--mu)}
+.drf .v{font-size:14px;color:var(--dk);font-weight:500}
+.drsl{width:100%;padding:9px 12px;background:var(--sa);border:1.5px solid var(--bo);border-radius:var(--ra);font-family:var(--fb);font-size:14px;margin-bottom:9px}
+.drnt{width:100%;padding:9px 12px;background:var(--sa);border:1.5px solid var(--bo);border-radius:var(--ra);font-family:var(--fb);font-size:13px;resize:vertical;min-height:72px}
+.drdl{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:var(--ra);background:var(--r);color:#fff;font-family:var(--fd);font-size:13px;font-weight:700;width:100%;justify-content:center;cursor:pointer}
+
+/* form admin */
+.afs{background:#fff;border-radius:var(--rl);border:1px solid var(--bo);padding:26px;margin-bottom:16px}
+.afs h3{font-family:var(--fd);font-size:15px;font-weight:700;margin-bottom:18px;padding-bottom:13px;border-bottom:1px solid var(--bo)}
+.afg2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.afg{margin-bottom:16px}
+.afg label{display:block;font-size:11px;font-weight:600;color:var(--mu);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.afg input,.afg select,.afg textarea{width:100%;padding:9px 12px;background:var(--sa);border:1.5px solid var(--bo);border-radius:var(--ra);font-family:var(--fb);font-size:14px;color:var(--dk);transition:border-color .2s;outline:none}
+.afg input:focus,.afg select:focus,.afg textarea:focus{border-color:var(--r)}
+.afg textarea{resize:vertical;min-height:100px}
+
+/* ══ MODAIS ══ */
+#vm{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.86);align-items:center;justify-content:center}
+#vm.op{display:flex}
+.vmi{background:var(--dk);border-radius:var(--rl);width:90%;max-width:740px;overflow:hidden}
+.vmh{padding:18px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07)}
+.vmt{font-family:var(--fd);font-size:15px;font-weight:700;color:#fff}
+.vmc{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;cursor:pointer}
+.vmc:hover{background:rgba(255,255,255,.2)}
+.vme{background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,.34)}
+
+#cm{display:none;position:fixed;inset:0;z-index:998;background:rgba(0,0,0,.68);align-items:center;justify-content:center;padding:20px}
+#cm.op{display:flex}
+.cmi{background:#fff;border-radius:var(--rl);width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.2)}
+.cmh{padding:24px 28px 18px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1}
+.cmh h2{font-family:var(--fd);font-size:18px;font-weight:800}
+.cmc{width:30px;height:30px;border-radius:50%;background:var(--sa);border:1px solid var(--bo);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:var(--mu);transition:all .2s}
+.cmc:hover{background:var(--dk);color:#fff}
+.cmb{padding:26px}
+.cfg{margin-bottom:16px}
+.cfg label{display:block;font-size:11px;font-weight:600;color:var(--mu);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.cfg input,.cfg select,.cfg textarea{width:100%;padding:10px 12px;background:var(--sa);border:1.5px solid var(--bo);border-radius:var(--ra);font-family:var(--fb);font-size:14px;color:var(--dk);transition:border-color .2s;outline:none}
+.cfg input:focus,.cfg select:focus,.cfg textarea:focus{border-color:var(--r)}
+.cfg2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.upz{border:2px dashed var(--bo);border-radius:var(--ra);padding:26px;text-align:center;background:var(--sa);cursor:pointer;transition:all .2s}
+.upz:hover{border-color:var(--r);background:rgba(232,90,10,.04)}
+.upz p{font-size:12.5px;color:var(--mu);margin-top:5px}
+.upz strong{font-size:14px;color:var(--dk)}
+.upico{font-size:26px;margin-bottom:4px}
+.ckl{display:flex;align-items:flex-start;gap:9px;cursor:pointer}
+.ckl input{margin-top:2px;accent-color:var(--r)}
+.ckl span{font-size:13px;color:var(--mu);line-height:1.5}
+.csucc{text-align:center;padding:44px 28px;display:none}
+.csucc.sh{display:block}
+.csico{font-size:52px;margin-bottom:14px}
+.csucc h3{font-family:var(--fd);font-size:22px;font-weight:800;margin-bottom:9px}
+.csucc p{font-size:14px;color:var(--mu);line-height:1.6}
+
+@media(max-width:900px){
+  #nav{padding:0 20px}.nm{display:none}
+  .W{padding:0 20px}
+  .nums-g{grid-template-columns:1fr 1fr 1fr;gap:24px}
+  .num-i{border-right:none;border-bottom:1px solid rgba(255,255,255,.07);padding:0 0 18px}
+  .sobre-g,.qual-g,.expo-g,.sh-top,.prod-intro,.social-top{grid-template-columns:1fr}
+  .sh-fotos{grid-template-columns:1fr 1fr}
+  .sh-difs{grid-template-columns:1fr 1fr}
+  .vid-g,.ps-grid{grid-template-columns:1fr}
+  .prod-bens{grid-template-columns:1fr}
+  .ft-g{grid-template-columns:1fr 1fr;gap:28px}
+  .cadeia-flow{flex-wrap:wrap;padding:0}.cadeia-flow::before{display:none}
+  .cstep{flex:0 0 50%;margin-bottom:28px}
+  .asb{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nl">Fri<span>vatti</span></div>
+  <div class="nm">
+    <a href="#" onclick="gs('#sobre')">Sobre</a>
+    <a href="#" onclick="gs('#cadeia')">Cadeia produtiva</a>
+    <a href="#" onclick="gs('#expo')">Exportação</a>
+    <a href="#" onclick="gs('#sh')" class="hl">🚧 Santa Helena</a>
+    <a href="#" onclick="gs('#prod')">Produtores</a>
+    <a href="#" onclick="gs('#social')">Vagas</a>
+  </div>
+  <div class="nr">
+    <a class="na" href="#" onclick="showAdm()">⚙ Admin</a>
+    <a class="nc" href="#" onclick="openC('Candidatura Espontânea')">Trabalhe conosco</a>
+  </div>
+</nav>
+
+<div id="site">
+
+<!-- ══════════════════════════════════
+  1. HERO — BANNER
+══════════════════════════════════ -->
+<section id="hero">
+  <div class="hbg"></div>
+  <div class="hov"></div>
+  <div class="W">
+    <div class="hcnt">
+      <div class="hbadge">
+        <div class="hbdot">✦</div>
+        <span>Paraná — Suinocultura com padrão de exportação</span>
+      </div>
+      <h1 class="hh1">Qualidade que<br>nasce <em>no campo</em></h1>
+      <p class="hp">Da suinocultura sustentável ao produto final com rastreabilidade completa. Mais de 30 anos cultivando parcerias sólidas no agronegócio paranaense.</p>
+      <!-- pills de produto -->
+      <div class="hpills">
+        <span class="hpill on">Todos os produtos</span>
+        <span class="hpill">Cortes suínos</span>
+        <span class="hpill">Embutidos</span>
+        <span class="hpill">Linha Export</span>
+      </div>
+      <div class="hacts">
+        <a class="btn bp" href="#" onclick="gs('#prods-det')">Ver produtos</a>
+        <a class="btn bo2" href="#" onclick="gs('#expo')">Exportação internacional</a>
+      </div>
+    </div>
+  </div>
+  <div class="hscr"><div class="hsbar"></div><span>scroll</span></div>
+</section>
+
+<!-- ══════════════════════════════════
+  2. SOBRE A EMPRESA
+══════════════════════════════════ -->
+<section id="sobre">
+  <div class="W">
+    <div class="sobre-g">
+      <div class="sobre-img fu">
+        <img src="https://images.unsplash.com/photo-1612015654834-11f0c7de01fb?w=900&q=85" alt="Frivatti" loading="lazy">
+        <div class="sobre-img-badge">🐷 Desde 1994 — Oeste do Paraná</div>
+      </div>
+      <div class="sobre-txt fu" style="transition-delay:.15s">
+        <div class="lbr">Sobre a Frivatti</div>
+        <h2>Três décadas construindo referência na suinocultura paranaense</h2>
+        <p>A Frivatti nasceu no oeste do Paraná com um propósito claro: produzir carne suína de qualidade, com responsabilidade e respeito à cadeia produtiva — do produtor integrado ao consumidor final.</p>
+        <p>Com unidades operacionais em Itaipulândia e Medianeira, e uma nova planta em construção em Santa Helena, a empresa consolidou-se como referência regional em bem-estar animal, rastreabilidade e padrão de exportação.</p>
+        <div class="sobre-uni">
+          <div class="uni-tag"><div class="uni-dot"></div><span>Itaipulândia</span><span class="un">Em operação</span></div>
+          <div class="uni-tag"><div class="uni-dot"></div><span>Medianeira</span><span class="un">Sede industrial</span></div>
+          <div class="uni-tag obra"><div class="uni-dot"></div><span>Santa Helena</span><span class="un">🚧 Em obras — 2026</span></div>
+        </div>
+        <a class="btn bdk" href="#">Nossa história completa</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+  3. DADOS / NÚMEROS
+══════════════════════════════════ -->
+<section id="nums">
+  <div class="W">
+    <div class="nums-g">
+      <div class="num-i fu"><div class="num-n">30<span class="num-s">+</span></div><div class="num-l">anos de mercado e tradição no agronegócio</div></div>
+      <div class="num-i fu" style="transition-delay:.08s"><div class="num-n">420</div><div class="num-l">produtores integrados ativos nas nossas unidades</div></div>
+      <div class="num-i fu" style="transition-delay:.16s"><div class="num-n">18</div><div class="num-l">municípios parceiros no oeste e extremo-oeste do PR</div></div>
+      <div class="num-i fu" style="transition-delay:.24s"><div class="num-n">12<span class="num-s" style="font-size:20px"> países</span></div><div class="num-l">destinos de exportação na América, Europa e Ásia</div></div>
+      <div class="num-i fu" style="transition-delay:.32s"><div class="num-n">+3k</div><div class="num-l">colaboradores diretos e indiretos nas três unidades</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+  4. CADEIA PRODUTIVA
+══════════════════════════════════ -->
+<section id="cadeia">
+  <div class="W">
+    <div class="cadeia-hdr fu">
+      <div class="lbr">Da origem ao destino</div>
+      <h2>A cadeia produtiva Frivatti</h2>
+      <p>Controlamos cada etapa do processo para garantir rastreabilidade, qualidade e segurança alimentar do começo ao fim.</p>
+    </div>
+    <div class="cadeia-flow">
+      <div class="cstep fu">
+        <div class="cs-ico">🧬<div class="cs-num">1</div></div>
+        <div class="cs-ttl">Genética e matrizes</div>
+        <div class="cs-sub">Controle do material genético e seleção de matrizes de alta performance</div>
+      </div>
+      <div class="cstep fu" style="transition-delay:.1s">
+        <div class="cs-ico">🏡<div class="cs-num">2</div></div>
+        <div class="cs-ttl">Produtores integrados</div>
+        <div class="cs-sub">420+ parceiros com suporte técnico contínuo e protocolo padronizado</div>
+      </div>
+      <div class="cstep fu" style="transition-delay:.2s">
+        <div class="cs-ico">🌾<div class="cs-num">3</div></div>
+        <div class="cs-ttl">Nutrição & manejo</div>
+        <div class="cs-sub">Rações formuladas pela Frivatti e protocolos de bem-estar animal</div>
+      </div>
+      <div class="cstep fu" style="transition-delay:.3s">
+        <div class="cs-ico">🏭<div class="cs-num">4</div></div>
+        <div class="cs-ttl">Abate & processamento</div>
+        <div class="cs-sub">Plantas sob inspeção SIF com tecnologia e rastreabilidade digital</div>
+      </div>
+      <div class="cstep fu" style="transition-delay:.4s">
+        <div class="cs-ico">❄️<div class="cs-num">5</div></div>
+        <div class="cs-ttl">Frigorificação</div>
+        <div class="cs-sub">Controle de temperatura e cadeia fria do abate à distribuição</div>
+      </div>
+      <div class="cstep fu" style="transition-delay:.5s">
+        <div class="cs-ico">🌍<div class="cs-num">6</div></div>
+        <div class="cs-ttl">Distribuição & export</div>
+        <div class="cs-sub">Varejo, food service e exportação para 12+ países com certificação</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+  5. CONTROLE DE QUALIDADE
+══════════════════════════════════ -->
+<section id="qualidade">
+  <div class="W">
+    <div class="qual-g">
+      <div class="qual-img fu">
+        <img src="https://images.unsplash.com/photo-1593443320739-77f74939d0da?w=900&q=85" alt="Qualidade" loading="lazy">
+        <div class="qual-img-ov"></div>
+      </div>
+      <div class="qual-txt fu" style="transition-delay:.15s">
+        <div class="lbk">Padrão de excelência</div>
+        <h2>Controle de qualidade em cada etapa do processo</h2>
+        <p>Da granja ao produto embalado, aplicamos protocolos rigorosos que garantem segurança alimentar, conformidade regulatória e a confiança de clientes em mais de 12 países.</p>
+        <div class="qual-list">
+          <div class="ql-i">
+            <div class="ql-ico">🔬</div>
+            <div class="ql-txt">
+              <h4>Análises laboratoriais contínuas</h4>
+              <p>Testes microbiológicos e físico-químicos em todas as fases da produção, com laudo rastreável por lote.</p>
+            </div>
+          </div>
+          <div class="ql-i">
+            <div class="ql-ico">📋</div>
+            <div class="ql-txt">
+              <h4>Inspeção SIF — Serviço de Inspeção Federal</h4>
+              <p>Nossas plantas operam sob inspeção federal permanente, habilitadas para comércio nacional e exportação.</p>
+            </div>
+          </div>
+          <div class="ql-i">
+            <div class="ql-ico">🐾</div>
+            <div class="ql-txt">
+              <h4>Bem-estar animal certificado</h4>
+              <p>Auditoria independente e aderência aos protocolos internacionais de bem-estar em toda a cadeia.</p>
+            </div>
+          </div>
+          <div class="ql-i">
+            <div class="ql-ico">📱</div>
+            <div class="ql-txt">
+              <h4>Rastreabilidade digital por lote</h4>
+              <p>Cada lote é rastreável do produtor integrado ao destino final, com dados disponíveis em tempo real.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+  6. EXPORTAÇÃO
+══════════════════════════════════ -->
+<section id="expo">
+  <div class="W">
+    <div class="expo-g">
+      <div class="fu">
+        <div class="lbr">Mercado internacional</div>
+        <div class="expo-txt">
+          <h2>Levando o sabor<br>brasileiro ao <em>mundo</em></h2>
+          <p>A Frivatti exporta para mais de 12 países com rastreabilidade completa, certificações sanitárias internacionais e embalagem customizada por mercado destino.</p>
+        </div>
+        <div class="expo-fs">
+          <div class="expo-f"><div class="expo-fic">🌍</div><span>Presença na América do Sul, Europa e Ásia</span></div>
+          <div class="expo-f"><div class="expo-fic">🏷</div><span>Certificados SIF, Halal e requisitos por mercado</span></div>
+          <div class="expo-f"><div class="expo-fic">📦</div><span>Embalagem e rotulagem customizadas por destino</span></div>
+          <div class="expo-f"><div class="expo-fic">🔍</div><span>Rastreabilidade total — da granja ao porto</span></div>
+          <div class="expo-f"><div class="expo-fic">🤝</div><span>Equipe dedicada de exportação e atendimento</span></div>
+        </div>
+        <div class="expo-paises">
+          <span class="pais-tag">🇨🇱 Chile</span>
+          <span class="pais-tag">🇦🇷 Argentina</span>
+          <span class="pais-tag">🇺🇾 Uruguai</span>
+          <span class="pais-tag">🇯🇵 Japão</span>
+          <span class="pais-tag">🇸🇬 Singapura</span>
+          <span class="pais-tag">🇵🇹 Portugal</span>
+          <span class="pais-tag">+ outros</span>
+        </div>
+      </div>
+      <div class="fu" style="transition-delay:.15s">
+        <div class="expo-form">
+          <h3>📬 Fale com nossa equipe de exportação</h3>
+          <div class="fg2">
+            <div class="fg"><label>Nome</label><input type="text" placeholder="Seu nome"></div>
+            <div class="fg"><label>Empresa</label><input type="text" placeholder="Nome da empresa"></div>
+          </div>
+          <div class="fg2">
+            <div class="fg"><label>País</label><select><option>Selecionar...</option><option>Chile</option><option>Argentina</option><option>Japão</option><option>Singapura</option><option>Portugal</option><option>Outro</option></select></div>
+            <div class="fg"><label>E-mail</label><input type="email" placeholder="email@empresa.com"></div>
+          </div>
+          <div class="fg"><label>Produto de interesse</label><select><option>Selecionar...</option><option>Cortes suínos resfriados</option><option>Cortes suínos congelados</option><option>Embutidos</option><option>Outro</option></select></div>
+          <div class="fg"><label>Mensagem</label><textarea placeholder="Volume estimado, destino, outros requisitos..."></textarea></div>
+          <button class="btn bp" style="width:100%;justify-content:center;padding:13px">Enviar mensagem</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+  7. SANTA HELENA
+══════════════════════════════════ -->
+<section id="sh">
+  <div class="shbg"></div>
+  <div class="W sh-in">
+    <div class="sh-top">
+      <div class="sh-tl fu">
+        <div class="lbk">Nova unidade</div>
+        <h2>Santa Helena:<br>o futuro da <em>Frivatti</em><br>em construção</h2>
+        <p>A terceira unidade operacional da Frivatti nasce em Santa Helena/PR com tecnologia de ponta, maior capacidade produtiva e o mesmo DNA de qualidade que construiu nossa história.</p>
+        <div class="sh-prev">🗓 Previsão de operação: 2º semestre de 2026</div>
+      </div>
+      <div class="sh-prog fu" style="transition-delay:.15s">
+        <h4>Andamento da obra — maio 2026</h4>
+        <div class="sh-pi"><div class="sh-pl"><span>Fundação e estrutura</span><span>100%</span></div><div class="sh-pb"><div class="sh-pf" data-w="100"></div></div></div>
+        <div class="sh-pi"><div class="sh-pl"><span>Instalações elétricas e hidráulicas</span><span>82%</span></div><div class="sh-pb"><div class="sh-pf" data-w="82"></div></div></div>
+        <div class="sh-pi"><div class="sh-pl"><span>Área de produção e frigorificação</span><span>65%</span></div><div class="sh-pb"><div class="sh-pf" data-w="65"></div></div></div>
+        <div class="sh-pi"><div class="sh-pl"><span>Acabamento e equipamentos</span><span>28%</span></div><div class="sh-pb"><div class="sh-pf" data-w="28"></div></div></div>
+        <div class="sh-pi"><div class="sh-pl"><span>Licenças e homologações</span><span>50%</span></div><div class="sh-pb"><div class="sh-pf" data-w="50"></div></div></div>
+      </div>
+    </div>
+
+    <!-- fotos da obra -->
+    <div class="lbk" style="margin-bottom:20px">Registro fotográfico — maio 2026</div>
+    <div class="sh-fotos fu">
+      <div class="sh-f"><img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=80" alt="Obra 1" loading="lazy"><div class="sh-ft">Estrutura principal</div></div>
+      <div class="sh-f"><img src="https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=600&q=80" alt="Obra 2" loading="lazy"><div class="sh-ft">Área de produção</div></div>
+      <div class="sh-f"><img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&q=80" alt="Obra 3" loading="lazy"><div class="sh-ft">Instalações internas</div></div>
+      <div class="sh-f"><img src="https://images.unsplash.com/photo-1590534247854-e97d5e3feef6?w=600&q=80" alt="Obra 4" loading="lazy"><div class="sh-ft">Área externa</div></div>
+    </div>
+
+    <!-- diferenciais -->
+    <div class="lbk" style="margin:52px 0 20px">O que vem por aí</div>
+    <div class="sh-difs fu">
+      <div class="sh-d"><div class="sh-d-ico">🏭</div><h4>Maior capacidade</h4><p>Planta projetada para 40% mais capacidade de abate que as unidades atuais.</p></div>
+      <div class="sh-d"><div class="sh-d-ico">♻️</div><h4>Sustentabilidade</h4><p>Biodigestão, reuso de água e geração solar integrados desde o projeto.</p></div>
+      <div class="sh-d"><div class="sh-d-ico">🤖</div><h4>Automação</h4><p>Linha de produção com automação de última geração e rastreabilidade digital integrada.</p></div>
+      <div class="sh-d"><div class="sh-d-ico">👥</div><h4>+280 empregos</h4><p>A nova unidade vai gerar mais de 280 empregos diretos na região de Santa Helena.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+  8. SUINOCULTURA & PRODUTORES
+══════════════════════════════════ -->
+<section id="prod">
+  <div class="W">
+    <!-- intro split -->
+    <div class="prod-intro">
+      <div class="prod-img fu">
+        <img src="https://images.unsplash.com/photo-1569597867579-d442f4a37a34?w=900&q=85" alt="Produtores" loading="lazy">
+        <div class="prod-img-ov"></div>
+      </div>
+      <div class="fu" style="transition-delay:.15s">
+        <div class="lbr">Programa de integração</div>
+        <h2 style="font-family:var(--fd);font-size:36px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin:14px 0 18px">Uma rede de parceiros que compartilha nossos valores</h2>
+        <p style="font-size:15px;color:var(--mu);line-height:1.78;margin-bottom:24px">Mais de 420 produtores integrados no oeste paranaense. Não é só uma relação comercial — é uma parceria de longo prazo com suporte técnico, garantia de compra e crescimento compartilhado.</p>
+        <div class="prod-bens">
+          <div class="pb"><div class="pb-ico">🤝</div><div><h4>Parceria garantida</h4><p>Contrato de longo prazo com compra de 100% da produção nos padrões Frivatti.</p></div></div>
+          <div class="pb"><div class="pb-ico">🐾</div><div><h4>Suporte veterinário</h4><p>Visitas regulares, protocolos sanitários e suporte 24h em emergências.</p></div></div>
+          <div class="pb"><div class="pb-ico">📊</div><div><h4>Gestão do lote</h4><p>Índices zootécnicos, ranking de produtores e relatórios por ciclo.</p></div></div>
+          <div class="pb"><div class="pb-ico">🌱</div><div><h4>Nutrição otimizada</h4><p>Rações formuladas e entregues conforme protocolo Frivatti por fase produtiva.</p></div></div>
+        </div>
+        <a class="btn bp" onclick="openC('Interesse em ser produtor integrado')">Quero ser produtor integrado</a>
+      </div>
+    </div>
+
+    <!-- vídeos -->
+    <div>
+      <div class="lbr" style="margin-bottom:12px">Conteúdo técnico</div>
+      <h3 class="fu" style="font-family:var(--fd);font-size:28px;font-weight:800;letter-spacing:-.6px;margin-bottom:28px">Tutoriais e materiais para produtores</h3>
+      <div class="vid-g">
+        <div class="vc fu" onclick="openVid('Como otimizar o manejo na fase de creche')">
+          <div class="vth"><img src="https://images.unsplash.com/photo-1612015654834-11f0c7de01fb?w=600&q=70" alt="v1" loading="lazy"><div class="vpl"><div class="vpb"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div><div class="vdu">14:22</div></div>
+          <div class="vbd"><div class="vcat">Manejo</div><h4>Como otimizar o manejo na fase de creche</h4><p>Densidade, temperatura, ventilação e protocolos de higiene para melhores resultados.</p></div>
+        </div>
+        <div class="vc fu" style="transition-delay:.1s" onclick="openVid('Nutrição por fase: do desmame ao abate')">
+          <div class="vth"><img src="https://images.unsplash.com/photo-1593443320739-77f74939d0da?w=600&q=70" alt="v2" loading="lazy"><div class="vpl"><div class="vpb"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div><div class="vdu">22:08</div></div>
+          <div class="vbd"><div class="vcat">Nutrição</div><h4>Nutrição por fase: do desmame ao abate</h4><p>Composição das rações, conversão alimentar e pontos críticos de cada fase produtiva.</p></div>
+        </div>
+        <div class="vc fu" style="transition-delay:.2s" onclick="openVid('Bem-estar animal: auditoria e conformidade')">
+          <div class="vth"><img src="https://images.unsplash.com/photo-1569597867579-d442f4a37a34?w=600&q=70" alt="v3" loading="lazy"><div class="vpl"><div class="vpb"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div><div class="vdu">18:45</div></div>
+          <div class="vbd"><div class="vcat">Bem-estar</div><h4>Bem-estar animal: auditoria e conformidade</h4><p>Checklist para aprovação na auditoria. Pontos críticos e melhorias práticas na granja.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+  9. ÁREA SOCIAL — VAGAS + PROVA SOCIAL
+══════════════════════════════════ -->
+<section id="social">
+  <div class="W">
+
+    <!-- vagas -->
+    <div class="social-top fu">
+      <div>
+        <div class="lbr">Faça parte da equipe</div>
+        <h2>Vagas abertas<br>para você</h2>
+      </div>
+      <div>
+        <p>Uma empresa sólida que cresce junto com seus colaboradores. Benefícios competitivos e oportunidade real de desenvolvimento no agronegócio paranaense.</p>
+        <a class="btn bgh" onclick="openC('Candidatura Espontânea')">Candidatura espontânea</a>
+      </div>
+    </div>
+
+    <div class="vg-list" style="margin-bottom:72px">
+      <div class="vg-i fu" onclick="openC('Médico Veterinário — Campo')">
+        <div><div class="vg-t">Médico Veterinário — Campo</div><div class="vg-tags"><span class="vg-tg lc">📍 Itaipulândia / Medianeira</span><span class="vg-tg">CLT</span><span class="vg-tg">Técnica</span></div></div>
+        <div class="vg-acts"><span class="vg-new">Nova</span><span class="btn bp" style="padding:9px 18px;font-size:13px">Candidatar-se</span></div>
+      </div>
+      <div class="vg-i fu" style="transition-delay:.07s" onclick="openC('Operador de Produção')">
+        <div><div class="vg-t">Operador de Produção</div><div class="vg-tags"><span class="vg-tg lc">📍 Itaipulândia</span><span class="vg-tg">CLT</span><span class="vg-tg">Produção</span></div></div>
+        <div class="vg-acts"><span class="btn bp" style="padding:9px 18px;font-size:13px">Candidatar-se</span></div>
+      </div>
+      <div class="vg-i fu" style="transition-delay:.14s" onclick="openC('Assistente de Logística')">
+        <div><div class="vg-t">Assistente de Logística</div><div class="vg-tags"><span class="vg-tg lc">📍 Medianeira</span><span class="vg-tg">CLT</span><span class="vg-tg">Logística</span></div></div>
+        <div class="vg-acts"><span class="btn bp" style="padding:9px 18px;font-size:13px">Candidatar-se</span></div>
+      </div>
+      <div class="vg-i fu" style="transition-delay:.21s" onclick="openC('Técnico Agrícola — Integração')">
+        <div><div class="vg-t">Técnico Agrícola — Programa de Integração</div><div class="vg-tags"><span class="vg-tg lc">📍 Itaipulândia & Medianeira</span><span class="vg-tg">CLT</span><span class="vg-tg">Técnica</span></div></div>
+        <div class="vg-acts"><span class="vg-new">Nova</span><span class="btn bp" style="padding:9px 18px;font-size:13px">Candidatar-se</span></div>
+      </div>
+      <div class="vg-i fu" style="transition-delay:.28s" onclick="openC('Estágio — Marketing')">
+        <div><div class="vg-t">Estágio — Marketing e Comunicação</div><div class="vg-tags"><span class="vg-tg lc">📍 Medianeira</span><span class="vg-tg">Estágio</span><span class="vg-tg">Marketing</span></div></div>
+        <div class="vg-acts"><span class="btn bp" style="padding:9px 18px;font-size:13px">Candidatar-se</span></div>
+      </div>
+    </div>
+
+    <!-- prova social -->
+    <div class="ps-hdr fu">
+      <div class="lbr">Prova social</div>
+      <h3>O que dizem sobre a Frivatti</h3>
+    </div>
+    <div class="ps-tabs fu">
+      <button class="pstab on" onclick="switchTab('colab',this)">Colaboradores</button>
+      <button class="pstab" onclick="switchTab('parc',this)">Parceiros & produtores</button>
+    </div>
+
+    <!-- tab colaboradores -->
+    <div id="tab-colab" class="ps-grid">
+      <div class="ps-card fu">
+        <div class="ps-stars">★★★★★</div>
+        <div class="ps-q">"Trabalho na Frivatti há 7 anos e cresci dentro da empresa. Entrei como auxiliar de produção e hoje sou líder de turno. O clima é bom, tem respeito e as lideranças ouvem a gente."</div>
+        <div class="ps-auth"><div class="ps-av"><img src="https://i.pravatar.cc/88?img=47" alt="c1"></div><div><div class="ps-nm">João Pedro Kessler</div><div class="ps-inf">Líder de Turno — Itaipulândia · 7 anos</div></div></div>
+      </div>
+      <div class="ps-card fu" style="transition-delay:.1s">
+        <div class="ps-stars">★★★★★</div>
+        <div class="ps-q">"O que mais valorizo aqui é a estabilidade. Tenho família, preciso de segurança — e a Frivatti me dá isso. Os benefícios são competitivos e a empresa está crescendo, o que nos anima."</div>
+        <div class="ps-auth"><div class="ps-av"><img src="https://i.pravatar.cc/88?img=44" alt="c2"></div><div><div class="ps-nm">Simone Bellé</div><div class="ps-inf">Assistente de Qualidade — Medianeira · 4 anos</div></div></div>
+      </div>
+      <div class="ps-card fu" style="transition-delay:.2s">
+        <div class="ps-stars">★★★★★</div>
+        <div class="ps-q">"Como veterinária de campo, tenho autonomia pra trabalhar e suporte quando preciso. A empresa investe em capacitação e o trabalho com os produtores é muito gratificante."</div>
+        <div class="ps-auth"><div class="ps-av"><img src="https://i.pravatar.cc/88?img=49" alt="c3"></div><div><div class="ps-nm">Camila Eberhardt</div><div class="ps-inf">Médica Veterinária de Campo · 2 anos</div></div></div>
+      </div>
+    </div>
+
+    <!-- tab parceiros (escondido) -->
+    <div id="tab-parc" class="ps-grid" style="display:none">
+      <div class="ps-card fu vis">
+        <div class="ps-stars">★★★★★</div>
+        <div class="ps-q">"Represento a Frivatti há 8 anos na região de Cascavel. O diferencial está na consistência do produto e no suporte pós-venda. Nunca tive problema que não fosse resolvido com rapidez."</div>
+        <div class="ps-auth"><div class="ps-av"><img src="https://i.pravatar.cc/88?img=14" alt="p1"></div><div><div class="ps-nm">Leandro Hartmann</div><div class="ps-inf">Representante comercial — Cascavel/PR · 8 anos</div></div></div>
+      </div>
+      <div class="ps-card fu vis" style="transition-delay:.1s">
+        <div class="ps-stars">★★★★★</div>
+        <div class="ps-q">"Integrado há 12 anos. O suporte técnico da Frivatti é o que me fez crescer. Fui de 600 para 2.400 terminações por ciclo com o acompanhamento da equipe deles. É uma parceria de verdade."</div>
+        <div class="ps-auth"><div class="ps-av"><img src="https://i.pravatar.cc/88?img=12" alt="p2"></div><div><div class="ps-nm">Valdir Ronsoni</div><div class="ps-inf">Produtor integrado — Matelândia/PR · 12 anos</div></div></div>
+      </div>
+      <div class="ps-card fu vis" style="transition-delay:.2s">
+        <div class="ps-stars">★★★★★</div>
+        <div class="ps-q">"Como distribuidora, o que me fidelizou foi a pontualidade e a rastreabilidade que a Frivatti oferece. Os clientes do food service pedem exatamente isso — e entregamos com o respaldo de quem produz com responsabilidade."</div>
+        <div class="ps-auth"><div class="ps-av"><img src="https://i.pravatar.cc/88?img=22" alt="p3"></div><div><div class="ps-nm">Adriana Roik</div><div class="ps-inf">Distribuidora — Toledo/PR · 5 anos</div></div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+  10. CTA FINAL
+══════════════════════════════════ -->
+<section id="cta">
+  <div class="W" style="text-align:center">
+    <h2 class="fu">Faça parte da<br><em>história Frivatti</em></h2>
+    <p class="fu" style="transition-delay:.1s">Como colaborador, produtor integrado ou cliente — há um lugar para você.</p>
+    <div class="cta-a fu" style="transition-delay:.2s">
+      <a class="btn bwh" onclick="openC('Candidatura Espontânea')">Ver vagas abertas</a>
+      <a class="btn bo2" href="#" onclick="gs('#prod')">Seja um produtor</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="ft">
+  <div class="W">
+    <div class="ft-g">
+      <div>
+        <div class="ft-logo">Fri<span>vatti</span></div>
+        <div class="ft-desc">Empresa paranaense com mais de 30 anos na suinocultura, presente em Itaipulândia, Medianeira e com nova unidade em construção em Santa Helena.</div>
+        <div class="ft-socs">
+          <a class="ft-sc" href="#">in</a>
+          <a class="ft-sc" href="#">ig</a>
+          <a class="ft-sc" href="#">yt</a>
+        </div>
+      </div>
+      <div class="ft-col">
+        <h4>Empresa</h4>
+        <div class="ft-ls">
+          <a href="#">Sobre a Frivatti</a>
+          <a href="#">Nossas unidades</a>
+          <a href="#" onclick="gs('#sh')">Santa Helena 🚧</a>
+          <a href="#">Sustentabilidade</a>
+        </div>
+      </div>
+      <div class="ft-col">
+        <h4>Produtos</h4>
+        <div class="ft-ls">
+          <a href="#">Cortes suínos</a>
+          <a href="#">Embutidos</a>
+          <a href="#">Linha export</a>
+          <a href="#" onclick="gs('#expo')">Exportação</a>
+        </div>
+      </div>
+      <div class="ft-col">
+        <h4>Contato</h4>
+        <div class="ft-ci"><div class="l">Itaipulândia</div><div class="v">(45) 3268-0000</div></div>
+        <div class="ft-ci"><div class="l">Medianeira</div><div class="v">(45) 3264-0000</div></div>
+        <div class="ft-ci"><div class="l">E-mail</div><div class="v">contato@frivatti.ind.br</div></div>
+        <div class="ft-ls" style="margin-top:10px">
+          <a href="#" onclick="openC('Candidatura Espontânea')">Trabalhe conosco</a>
+          <a href="#">Política de privacidade</a>
+        </div>
+      </div>
+    </div>
+    <div class="ft-bot">
+      <span>© 2026 Frivatti Indústria e Comércio Ltda. · CNPJ 00.000.000/0001-00</span>
+      <span>Desenvolvido por <strong style="color:rgba(255,255,255,.42)">Agência Fifteen</strong></span>
+    </div>
+  </div>
+</footer>
+</div><!-- /site -->
+
+<!-- ══════ ADMIN ══════ -->
+<div id="adm">
+  <div class="al">
+    <aside class="asb">
+      <div class="asbl"><div class="lt">Fri<span>vatti</span></div><div class="ls">Painel administrativo</div></div>
+      <nav class="anv">
+        <div class="ans">Principal</div>
+        <a class="ac" onclick="ap('db')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+        <div class="ans">RH</div>
+        <a onclick="ap('vg')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>Vagas</a>
+        <a onclick="ap('cand')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Candidatos</a>
+        <div class="ans">Produtores</div>
+        <a onclick="ap('vids')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Vídeos / tutoriais</a>
+        <a onclick="ap('depos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Depoimentos</a>
+        <div class="ans">Conteúdo</div>
+        <a onclick="ap('blg')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Blog</a>
+        <a onclick="ap('prd')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>Produtos</a>
+        <div class="ans">Santa Helena</div>
+        <a onclick="ap('sh')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>Progresso da obra</a>
+        <div class="ans">Sistema</div>
+        <a onclick="showSite()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Ver site público</a>
+      </nav>
+      <div class="au"><div class="aua">MK</div><div><div class="aun">MKT Fifteen</div><div class="aur">Superadmin</div></div></div>
+    </aside>
+    <main class="amn">
+
+      <!-- DASHBOARD -->
+      <div id="p-db" class="apc">
+        <div class="ahd"><div class="ahdt">Dashboard</div><span style="font-size:13px;color:var(--mu)">Segunda, 11 maio 2026</span></div>
+        <div class="abd">
+          <div class="asts">
+            <div class="sc2"><div class="scl">Vagas abertas</div><div class="scn">5</div><div class="scd">↑ 2 novas este mês</div></div>
+            <div class="sc2"><div class="scl">Candidatos (mês)</div><div class="scn">34</div><div class="scd">↑ +18% vs anterior</div></div>
+            <div class="sc2"><div class="scl">Vídeos publicados</div><div class="scn">12</div><div class="scd">↑ 3 novos</div></div>
+            <div class="sc2"><div class="scl">Formulários produtor</div><div class="scn">7</div><div class="scd ng">3 sem retorno</div></div>
+          </div>
+          <div class="ag2">
+            <div class="acd">
+              <div class="ach"><h3>Últimas candidaturas</h3><a onclick="ap('cand')">Ver todas →</a></div>
+              <table class="at"><thead><tr><th>Nome</th><th>Vaga</th><th>Data</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Ana Paula Metz</td><td>Médico Vet.</td><td>11/05</td><td><span class="sb2 sok">Novo</span></td></tr>
+                <tr><td>Carlos Brunetti</td><td>Op. Produção</td><td>10/05</td><td><span class="sb2 san">Análise</span></td></tr>
+                <tr><td>Fernanda Olivski</td><td>Est. Marketing</td><td>09/05</td><td><span class="sb2 sok">Novo</span></td></tr>
+                <tr><td>Roberto Schuck</td><td>Téc. Agrícola</td><td>08/05</td><td><span class="sb2 san">Análise</span></td></tr>
+              </tbody></table>
+            </div>
+            <div class="acd">
+              <div class="ach"><h3>Santa Helena — Obra</h3><a onclick="ap('sh')">Atualizar →</a></div>
+              <div style="padding:18px;display:flex;flex-direction:column;gap:10px">
+                <div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-bottom:4px"><span>Fundação e estrutura</span><span style="font-weight:700;color:var(--dk)">100%</span></div><div style="height:5px;background:var(--sa);border-radius:3px"><div style="height:100%;width:100%;border-radius:3px;background:linear-gradient(90deg,var(--r),var(--rv))"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-bottom:4px"><span>Elétrica e hidráulica</span><span style="font-weight:700;color:var(--dk)">82%</span></div><div style="height:5px;background:var(--sa);border-radius:3px"><div style="height:100%;width:82%;border-radius:3px;background:linear-gradient(90deg,var(--r),var(--rv))"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-bottom:4px"><span>Produção e frigorificação</span><span style="font-weight:700;color:var(--dk)">65%</span></div><div style="height:5px;background:var(--sa);border-radius:3px"><div style="height:100%;width:65%;border-radius:3px;background:linear-gradient(90deg,var(--r),var(--rv))"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-bottom:4px"><span>Acabamento e equipamentos</span><span style="font-weight:700;color:var(--dk)">28%</span></div><div style="height:5px;background:var(--sa);border-radius:3px"><div style="height:100%;width:28%;border-radius:3px;background:linear-gradient(90deg,var(--r),var(--rv))"></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VAGAS -->
+      <div id="p-vg" class="apc" style="display:none">
+        <div class="ahd"><div class="ahdt">Vagas</div><div class="ahda"><button class="abtn" onclick="ap('nvg')">+ Nova vaga</button></div></div>
+        <div class="abd">
+          <div class="acd">
+            <div class="ach"><h3>Todas as vagas</h3></div>
+            <table class="at"><thead><tr><th>Título</th><th>Local</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Médico Veterinário — Campo</strong></td><td>Itaipulândia</td><td>CLT</td><td><span class="sb2 sok">Publicada</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer" onclick="ap('nvg')">Editar</a></td></tr>
+              <tr><td><strong>Operador de Produção</strong></td><td>Itaipulândia</td><td>CLT</td><td><span class="sb2 sok">Publicada</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer" onclick="ap('nvg')">Editar</a></td></tr>
+              <tr><td><strong>Assistente de Logística</strong></td><td>Medianeira</td><td>CLT</td><td><span class="sb2 sok">Publicada</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer" onclick="ap('nvg')">Editar</a></td></tr>
+              <tr><td><strong>Técnico Agrícola</strong></td><td>Ambas</td><td>CLT</td><td><span class="sb2 sok">Publicada</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer" onclick="ap('nvg')">Editar</a></td></tr>
+              <tr><td><strong>Estágio — Marketing</strong></td><td>Medianeira</td><td>Estágio</td><td><span class="sb2 sok">Publicada</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer" onclick="ap('nvg')">Editar</a></td></tr>
+              <tr><td><strong>Assistente RH</strong></td><td>Medianeira</td><td>CLT</td><td><span class="sb2 senc">Encerrada</span></td><td><a style="color:var(--mu);font-size:12px;font-weight:600;cursor:pointer">Reabrir</a></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOVA VAGA -->
+      <div id="p-nvg" class="apc" style="display:none">
+        <div class="ahd"><div class="ahdt">Nova vaga</div><div class="ahda"><button onclick="ap('vg')" style="padding:8px 14px;border-radius:var(--ra);font-size:13px;background:var(--sa);border:1px solid var(--bo);color:var(--mu);cursor:pointer">Cancelar</button><button class="abtn">Publicar</button></div></div>
+        <div class="abd">
+          <div class="afs"><h3>Informações</h3>
+            <div class="afg"><label>Título da vaga</label><input type="text" value="Médico Veterinário — Campo"></div>
+            <div class="afg2">
+              <div class="afg"><label>Local</label><select><option>Itaipulândia</option><option>Medianeira</option><option>Ambas</option></select></div>
+              <div class="afg"><label>Tipo</label><select><option>CLT</option><option>Estágio</option><option>Temporário</option><option>PJ</option></select></div>
+              <div class="afg"><label>Área</label><select><option>Técnica</option><option>Produção</option><option>Logística</option><option>RH</option><option>Marketing</option></select></div>
+              <div class="afg"><label>Status</label><select><option>Publicada</option><option>Rascunho</option><option>Encerrada</option></select></div>
+            </div>
+          </div>
+          <div class="afs"><h3>Conteúdo</h3>
+            <div class="afg"><label>Descrição da função</label><textarea>Responsável pelo acompanhamento técnico dos produtores integrados da região, com visitas periódicas, aplicação de protocolos sanitários e suporte em emergências veterinárias.</textarea></div>
+            <div class="afg2">
+              <div class="afg"><label>Requisitos (um por linha)</label><textarea>Formação em Medicina Veterinária
+CRMV ativo
+Habilitação — veículo próprio
+Disponibilidade para campo</textarea></div>
+              <div class="afg"><label>Benefícios (um por linha)</label><textarea>Vale refeição e alimentação
+Plano de saúde
+Veículo e combustível
+Celular corporativo</textarea></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CANDIDATOS -->
+      <div id="p-cand" class="apc" style="display:none">
+        <div class="ahd"><div class="ahdt">Candidatos</div><div class="ahda"><input style="padding:8px 12px;border-radius:var(--ra);border:1px solid var(--bo);font-size:13px;width:190px" placeholder="Buscar..."><select style="padding:8px 12px;border-radius:var(--ra);border:1px solid var(--bo);font-size:13px"><option>Todas as vagas</option><option>Médico Veterinário</option></select></div></div>
+        <div class="abd" style="padding:0;overflow:hidden">
+          <div class="cpan">
+            <div class="cla">
+              <div class="acd">
+                <table class="at"><thead><tr><th>Nome</th><th>Vaga</th><th>Cidade</th><th>Data</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr style="cursor:pointer;background:rgba(232,90,10,.04)"><td><strong>Ana Paula Metz</strong></td><td>Médico Vet.</td><td>Medianeira</td><td>11/05</td><td><span class="sb2 sok">Novo</span></td></tr>
+                  <tr style="cursor:pointer"><td><strong>Carlos Brunetti</strong></td><td>Op. Produção</td><td>Itaipulândia</td><td>10/05</td><td><span class="sb2 san">Análise</span></td></tr>
+                  <tr style="cursor:pointer"><td><strong>Fernanda Olivski</strong></td><td>Est. Marketing</td><td>Medianeira</td><td>09/05</td><td><span class="sb2 sok">Novo</span></td></tr>
+                  <tr style="cursor:pointer"><td><strong>Roberto Schuck</strong></td><td>Téc. Agrícola</td><td>Toledo</td><td>08/05</td><td><span class="sb2 san">Análise</span></td></tr>
+                  <tr style="cursor:pointer"><td><strong>Juliana Preuss</strong></td><td>Logística</td><td>Cascavel</td><td>07/05</td><td><span class="sb2 sok">Novo</span></td></tr>
+                </tbody></table>
+              </div>
+            </div>
+            <div class="cdr">
+              <div class="drn">Ana Paula Metz</div>
+              <div class="drv">Candidatura: <strong>Médico Veterinário — Campo</strong></div>
+              <div class="drs"><h4>Dados pessoais</h4>
+                <div class="drf"><span class="l">E-mail</span><span class="v">ana.metz@email.com</span></div>
+                <div class="drf"><span class="l">Telefone</span><span class="v">(45) 99813-4422</span></div>
+                <div class="drf"><span class="l">Cidade</span><span class="v">Medianeira, PR</span></div>
+                <div class="drf"><span class="l">Recebido em</span><span class="v">11/05/2026 às 09:14</span></div>
+              </div>
+              <div class="drs"><h4>Apresentação</h4><p style="font-size:13px;color:var(--mu);line-height:1.65">"Sou médica veterinária com 4 anos de experiência em suinocultura intensiva. Trabalhei em integradora no RS e busco crescimento na região oeste do PR..."</p></div>
+              <div class="drs"><h4>Currículo</h4><button class="drdl">📄 Baixar currículo (PDF)</button></div>
+              <div class="drs"><h4>Status</h4><select class="drsl"><option>Novo</option><option>Em análise</option><option>Aprovado</option><option>Reprovado</option><option>Arquivado</option></select></div>
+              <div class="drs"><h4>Anotações internas</h4><textarea class="drnt">Perfil muito alinhado. Agendar entrevista para semana que vem.</textarea></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VÍDEOS -->
+      <div id="p-vids" class="apc" style="display:none">
+        <div class="ahd"><div class="ahdt">Vídeos e tutoriais</div><div class="ahda"><button class="abtn">+ Novo vídeo</button></div></div>
+        <div class="abd">
+          <div class="acd"><div class="ach"><h3>Vídeos publicados</h3></div>
+            <table class="at"><thead><tr><th>Título</th><th>Categoria</th><th>Duração</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Como otimizar o manejo na fase de creche</strong></td><td>Manejo</td><td>14:22</td><td><span class="sb2 sok">Publicado</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+              <tr><td><strong>Nutrição por fase: do desmame ao abate</strong></td><td>Nutrição</td><td>22:08</td><td><span class="sb2 sok">Publicado</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+              <tr><td><strong>Bem-estar animal: auditoria e conformidade</strong></td><td>Bem-estar</td><td>18:45</td><td><span class="sb2 sok">Publicado</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+              <tr><td><strong>Controle de ambiência em dias quentes</strong></td><td>Manejo</td><td>09:30</td><td><span class="sb2 san">Rascunho</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEPOIMENTOS -->
+      <div id="p-depos" class="apc" style="display:none">
+        <div class="ahd"><div class="ahdt">Depoimentos</div><div class="ahda"><button class="abtn">+ Novo depoimento</button></div></div>
+        <div class="abd">
+          <div class="acd"><div class="ach"><h3>Todos os depoimentos</h3></div>
+            <table class="at"><thead><tr><th>Nome</th><th>Tipo</th><th>Cargo / Info</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody>
+              <tr><td><strong>João Pedro Kessler</strong></td><td>Colaborador</td><td>Líder de Turno — Itaipulândia</td><td><span class="sb2 sok">Ativo</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+              <tr><td><strong>Simone Bellé</strong></td><td>Colaborador</td><td>Assist. Qualidade — Medianeira</td><td><span class="sb2 sok">Ativo</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+              <tr><td><strong>Valdir Ronsoni</strong></td><td>Produtor</td><td>Integrado — Matelândia/PR · 12 anos</td><td><span class="sb2 sok">Ativo</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+              <tr><td><strong>Leandro Hartmann</strong></td><td>Parceiro</td><td>Representante — Cascavel/PR</td><td><span class="sb2 sok">Ativo</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOG -->
+      <div id="p-blg" class="apc" style="display:none">
+        <div class="ahd"><div class="ahdt">Blog / Notícias</div><div class="ahda"><button class="abtn">+ Novo artigo</button></div></div>
+        <div class="abd">
+          <div class="acd"><div class="ach"><h3>Todos os artigos</h3></div>
+            <table class="at"><thead><tr><th>Título</th><th>Categoria</th><th>Data</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Novos protocolos elevam padrão de certificação</strong></td><td>Bem-estar</td><td>08/05</td><td><span class="sb2 sok">Publicado</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+              <tr><td><strong>Frivatti expande no mercado asiático</strong></td><td>Exportação</td><td>02/05</td><td><span class="sb2 sok">Publicado</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+              <tr><td><strong>Biodigestores reduzem emissões em 28%</strong></td><td>Sustentabilidade</td><td>18/04</td><td><span class="sb2 sok">Publicado</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUTOS -->
+      <div id="p-prd" class="apc" style="display:none">
+        <div class="ahd"><div class="ahdt">Produtos</div><div class="ahda"><button class="abtn">+ Novo produto</button></div></div>
+        <div class="abd">
+          <div class="acd"><div class="ach"><h3>Produtos cadastrados</h3></div>
+            <table class="at"><thead><tr><th>Produto</th><th>Categoria</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Cortes Suínos Premium</strong></td><td>Cortes</td><td><span class="sb2 sok">Ativo</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+              <tr><td><strong>Linha de Embutidos</strong></td><td>Industrializados</td><td><span class="sb2 sok">Ativo</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+              <tr><td><strong>Linha Export</strong></td><td>Exportação</td><td><span class="sb2 sok">Ativo</span></td><td><a style="color:var(--r);font-size:12px;font-weight:600;cursor:pointer">Editar</a></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SANTA HELENA ADMIN -->
+      <div id="p-sh" class="apc" style="display:none">
+        <div class="ahd"><div class="ahdt">Santa Helena — Progresso da obra</div><div class="ahda"><button class="abtn">Salvar alterações</button></div></div>
+        <div class="abd">
+          <div class="afs"><h3>Percentuais de andamento</h3>
+            <div class="afg2">
+              <div class="afg"><label>Fundação e estrutura (%)</label><input type="number" value="100" min="0" max="100"></div>
+              <div class="afg"><label>Elétrica e hidráulica (%)</label><input type="number" value="82" min="0" max="100"></div>
+              <div class="afg"><label>Produção e frigorificação (%)</label><input type="number" value="65" min="0" max="100"></div>
+              <div class="afg"><label>Acabamento e equipamentos (%)</label><input type="number" value="28" min="0" max="100"></div>
+              <div class="afg"><label>Licenças e homologações (%)</label><input type="number" value="50" min="0" max="100"></div>
+              <div class="afg"><label>Previsão de operação</label><input type="text" value="2º semestre de 2026"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div id="vm"><div class="vmi"><div class="vmh"><div class="vmt" id="vmt">Título</div><div class="vmc" onclick="cV()">✕</div></div><div class="vme">▶ Player embed YouTube / Vimeo</div></div></div>
+
+<!-- CANDIDATURA MODAL -->
+<div id="cm"><div class="cmi">
+  <div class="cmh"><h2 id="cmt">Candidatura</h2><div class="cmc" onclick="cC()">✕</div></div>
+  <div class="cmb" id="cmbd">
+    <div class="cfg"><label>Vaga de interesse</label><select id="cvg"><option>Médico Veterinário — Campo</option><option>Operador de Produção</option><option>Assistente de Logística</option><option>Técnico Agrícola</option><option>Estágio — Marketing</option><option>Candidatura Espontânea</option><option>Interesse em ser produtor integrado</option></select></div>
+    <div class="cfg2">
+      <div class="cfg"><label>Nome completo *</label><input type="text" placeholder="Seu nome completo"></div>
+      <div class="cfg"><label>E-mail *</label><input type="email" placeholder="email@exemplo.com"></div>
+    </div>
+    <div class="cfg2">
+      <div class="cfg"><label>Telefone / WhatsApp *</label><input type="tel" placeholder="(45) 99999-0000"></div>
+      <div class="cfg"><label>Cidade *</label><input type="text" placeholder="Sua cidade"></div>
+    </div>
+    <div class="cfg"><label>Carta de apresentação</label><textarea placeholder="Fale sobre você e seu interesse..." style="min-height:85px"></textarea></div>
+    <div class="cfg">
+      <label>Currículo * (PDF, DOC, DOCX — máx. 5 MB)</label>
+      <div class="upz" onclick="document.getElementById('fi').click()"><div class="upico">📎</div><strong>Clique para selecionar ou arraste o arquivo</strong><p>PDF, DOC, DOCX — máximo 5 MB</p></div>
+      <input type="file" id="fi" accept=".pdf,.doc,.docx" style="display:none" onchange="ufn(this)">
+      <div id="fn" style="font-size:12px;color:var(--r);margin-top:6px;display:none"></div>
+    </div>
+    <div class="cfg"><label class="ckl"><input type="checkbox"><span>Concordo com a política de privacidade da Frivatti e autorizo o uso dos meus dados para fins de recrutamento.</span></label></div>
+    <button class="btn bp" style="width:100%;justify-content:center;padding:13px;margin-top:8px" onclick="subC()">Enviar candidatura</button>
+  </div>
+  <div class="csucc" id="csucc"><div class="csico">✅</div><h3>Candidatura enviada!</h3><p>Recebemos sua candidatura com sucesso. Nossa equipe de RH entrará em contato em breve. Obrigado pelo interesse em fazer parte da Frivatti!</p></div>
+</div></div>
+
+<!-- WA -->
+<a id="wa" href="https://wa.me/5545999990000" target="_blank"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+
+<script>
+/* NAV */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>60));
+
+/* FADE-UP */
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')}),{threshold:.1});
+document.querySelectorAll('.fu').forEach(el=>io.observe(el));
+
+/* PROGRESS BARS */
+const pio=new IntersectionObserver(e=>e.forEach(x=>{
+  if(x.isIntersecting){document.querySelectorAll('.sh-pf').forEach(b=>{b.style.width=b.dataset.w+'%'});pio.disconnect()}
+}),{threshold:.2});
+const shEl=document.getElementById('sh');if(shEl)pio.observe(shEl);
+
+/* SCROLL */
+function gs(sel){const el=document.querySelector(sel);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+
+/* SITE / ADMIN */
+function showAdm(){
+  document.getElementById('site').style.display='none';
+  document.getElementById('adm').style.display='block';
+  document.getElementById('nav').style.display='none';
+  document.getElementById('wa').style.display='none';
+  ap('db');
+}
+function showSite(){
+  document.getElementById('site').style.display='block';
+  document.getElementById('adm').style.display='none';
+  document.getElementById('nav').style.display='flex';
+  document.getElementById('wa').style.display='flex';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ADMIN PAGES */
+function ap(id){
+  document.querySelectorAll('.apc').forEach(el=>el.style.display='none');
+  const el=document.getElementById('p-'+id);
+  if(el){el.style.display='flex';el.style.flexDirection='column';el.style.flex='1';el.style.overflow='hidden';}
+  document.querySelectorAll('.anv a').forEach(a=>a.classList.remove('ac'));
+}
+
+/* VIDEO */
+function openVid(t){document.getElementById('vmt').textContent=t;document.getElementById('vm').classList.add('op')}
+function cV(){document.getElementById('vm').classList.remove('op')}
+document.getElementById('vm').addEventListener('click',function(e){if(e.target===this)cV()});
+
+/* CANDIDATURA */
+function openC(v){
+  const s=document.getElementById('cvg');
+  for(let o of s.options){if(o.value===v||o.text===v){s.value=o.value;break;}}
+  document.getElementById('cmbd').style.display='block';
+  document.getElementById('csucc').classList.remove('sh');
+  document.getElementById('cm').classList.add('op');
+  document.body.style.overflow='hidden';
+}
+function cC(){document.getElementById('cm').classList.remove('op');document.body.style.overflow='';}
+document.getElementById('cm').addEventListener('click',function(e){if(e.target===this)cC()});
+function subC(){document.getElementById('cmbd').style.display='none';document.getElementById('csucc').classList.add('sh')}
+function ufn(i){const d=document.getElementById('fn');if(i.files[0]){d.style.display='block';d.textContent='📎 '+i.files[0].name;}}
+
+/* TABS PROVA SOCIAL */
+function switchTab(tab,btn){
+  document.querySelectorAll('.pstab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('tab-colab').style.display=tab==='colab'?'grid':'none';
+  document.getElementById('tab-parc').style.display=tab==='parc'?'grid':'none';
+}
+
+/* PILLS HERO */
+document.querySelectorAll('.hpill').forEach(p=>{
+  p.addEventListener('click',function(){
+    document.querySelectorAll('.hpill').forEach(x=>x.classList.remove('on'));
+    this.classList.add('on');
+  });
+});
+
+/* INIT */
+document.getElementById('p-db').style.cssText='display:flex;flex-direction:column;flex:1;overflow:hidden';
+</script>
+</body>
+</html>
