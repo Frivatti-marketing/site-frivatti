@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frivatti — Painel Administrativo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --r:#e85a0a;--rv:#ff6120;--rd:#c24408;
+  --dk:#1a1a16;--dk2:#222220;
+  --sa:#f5f2eb;--sa2:#edeae2;
+  --mu:#7a7a6e;--bo:#d8d4c8;--wh:#ffffff;
+  --fd:'Bricolage Grotesque',sans-serif;
+  --fb:'DM Sans',sans-serif;
+  --ra:6px;--rl:14px;
+}
+body{font-family:var(--fb);background:var(--sa);color:var(--dk);min-height:100vh}
+
+/* ─── Login ─── */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--dk)}
+.login-card{background:var(--dk2);border:1px solid #333330;border-radius:var(--rl);padding:48px 40px;width:100%;max-width:420px}
+.login-logo{font-family:var(--fd);font-size:28px;font-weight:700;color:var(--wh);margin-bottom:6px}
+.login-logo span{color:var(--r)}
+.login-sub{color:var(--mu);font-size:13px;margin-bottom:32px}
+.login-card label{display:block;font-size:13px;font-weight:500;color:#ccc;margin-bottom:6px}
+.login-card input{width:100%;padding:11px 14px;background:#2a2a28;border:1px solid #3a3a38;border-radius:var(--ra);color:var(--wh);font-family:var(--fb);font-size:14px;outline:none;transition:border .2s}
+.login-card input:focus{border-color:var(--r)}
+.login-field{margin-bottom:20px}
+.btn-login{width:100%;padding:12px;background:var(--r);color:var(--wh);border:none;border-radius:var(--ra);font-family:var(--fb);font-size:15px;font-weight:600;cursor:pointer;transition:background .2s;margin-top:8px}
+.btn-login:hover{background:var(--rv)}
+.btn-login:disabled{opacity:.6;cursor:not-allowed}
+.login-error{background:#3a1a1a;border:1px solid #7a2a2a;color:#f88;border-radius:var(--ra);padding:10px 14px;font-size:13px;margin-top:16px;display:none}
+
+/* ─── Admin layout ─── */
+#admin-screen{display:none;min-height:100vh}
+.admin-layout{display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:238px;min-width:238px;background:var(--dk2);display:flex;flex-direction:column;border-right:1px solid #2e2e2c}
+.sidebar-header{padding:24px 20px 16px}
+.sidebar-logo{font-family:var(--fd);font-size:22px;font-weight:700;color:var(--wh)}
+.sidebar-logo span{color:var(--r)}
+.sidebar-sub{font-size:11px;color:var(--mu);margin-top:2px;text-transform:uppercase;letter-spacing:.06em}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0}
+.nav-section{padding:16px 20px 4px;font-size:10px;font-weight:600;color:#555552;text-transform:uppercase;letter-spacing:.08em}
+.nav-link{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13.5px;color:#aaa;cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left;text-decoration:none}
+.nav-link:hover{color:var(--wh);background:rgba(255,255,255,.04)}
+.nav-link.active{color:var(--wh);background:rgba(232,90,10,.12);border-right:3px solid var(--r)}
+.nav-link svg{width:15px;height:15px;flex-shrink:0;opacity:.7}
+.nav-link.active svg{opacity:1}
+.nav-link-ext{opacity:.6}
+.sidebar-user{padding:16px 20px;border-top:1px solid #2e2e2c}
+.sidebar-user-email{font-size:12px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sidebar-user-label{font-size:10px;color:#444442;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em}
+
+/* Main */
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.main-header{background:var(--wh);border-bottom:1px solid var(--bo);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.main-title{font-family:var(--fd);font-size:20px;font-weight:600;color:var(--dk)}
+.header-actions{display:flex;gap:10px;align-items:center}
+.main-content{flex:1;overflow-y:auto;padding:32px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--ra);font-family:var(--fb);font-size:13.5px;font-weight:500;cursor:pointer;border:none;transition:all .15s;text-decoration:none}
+.btn-primary{background:var(--r);color:var(--wh)}
+.btn-primary:hover{background:var(--rv)}
+.btn-secondary{background:var(--sa2);color:var(--dk);border:1px solid var(--bo)}
+.btn-secondary:hover{background:var(--bo)}
+.btn-ghost{background:transparent;color:var(--mu);border:1px solid var(--bo)}
+.btn-ghost:hover{background:var(--sa2);color:var(--dk)}
+.btn-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.btn-danger:hover{background:#fee2e2}
+.btn-sm{padding:6px 12px;font-size:12.5px}
+.btn-xs{padding:4px 9px;font-size:12px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Cards */
+.card{background:var(--wh);border:1px solid var(--bo);border-radius:var(--rl);padding:24px}
+.card-title{font-family:var(--fd);font-size:16px;font-weight:600;color:var(--dk);margin-bottom:16px}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--wh);border:1px solid var(--bo);border-radius:var(--rl);padding:20px 24px}
+.stat-label{font-size:12px;color:var(--mu);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.stat-value{font-family:var(--fd);font-size:32px;font-weight:700;color:var(--dk)}
+.stat-sub{font-size:12px;color:var(--mu);margin-top:4px}
+
+/* Table */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;padding:10px 14px;font-size:11.5px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--bo);background:var(--sa)}
+td{padding:12px 14px;border-bottom:1px solid var(--sa2);color:var(--dk);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--sa)}
+.table-actions{display:flex;gap:6px}
+.clickable-row{cursor:pointer}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap}
+.badge-green{background:#dcfce7;color:#166534}
+.badge-yellow{background:#fef9c3;color:#854d0e}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-gray{background:#f1f5f9;color:#475569}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-orange{background:#ffedd5;color:#9a3412}
+
+/* Forms */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.form-group{margin-bottom:18px}
+.form-group.full{grid-column:1/-1}
+.form-label{display:block;font-size:13px;font-weight:500;color:var(--dk);margin-bottom:6px}
+.form-label span{color:var(--mu);font-weight:400}
+.form-control{width:100%;padding:9px 12px;border:1px solid var(--bo);border-radius:var(--ra);font-family:var(--fb);font-size:14px;color:var(--dk);background:var(--wh);outline:none;transition:border .2s}
+.form-control:focus{border-color:var(--r);box-shadow:0 0 0 3px rgba(232,90,10,.08)}
+textarea.form-control{resize:vertical;min-height:100px}
+select.form-control{cursor:pointer}
+.form-check{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.form-check input[type=checkbox]{width:16px;height:16px;accent-color:var(--r);cursor:pointer}
+.form-check-label{font-size:14px;color:var(--dk)}
+
+/* Upload */
+.upload-group{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.upload-preview{width:80px;height:80px;border:1px solid var(--bo);border-radius:var(--ra);object-fit:cover;background:var(--sa2)}
+.upload-preview.hidden{display:none}
+.upload-btn{cursor:pointer}
+input[type=file].hidden{display:none}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-overlay.hidden{display:none}
+.modal-card{background:var(--wh);border-radius:var(--rl);width:100%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-family:var(--fd);font-size:17px;font-weight:600;color:var(--dk)}
+.modal-close{background:none;border:none;font-size:22px;color:var(--mu);cursor:pointer;line-height:1;padding:2px 6px}
+.modal-close:hover{color:var(--dk)}
+.modal-body{padding:24px;overflow-y:auto;flex:1}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--bo);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0}
+
+/* Confirm popup */
+.confirm-popup{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:1100}
+.confirm-popup.hidden{display:none}
+.confirm-card{background:var(--wh);border-radius:var(--rl);padding:24px;max-width:360px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.2)}
+.confirm-title{font-family:var(--fd);font-size:16px;font-weight:600;margin-bottom:8px}
+.confirm-text{font-size:14px;color:var(--mu);margin-bottom:20px}
+.confirm-actions{display:flex;gap:10px;justify-content:flex-end}
+
+/* Toast */
+.toast-container{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:8px;z-index:2000}
+.toast{background:var(--dk);color:var(--wh);padding:12px 18px;border-radius:var(--ra);font-size:13.5px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.3);animation:toastIn .25s ease;max-width:340px}
+.toast.success{border-left:4px solid #22c55e}
+.toast.error{border-left:4px solid #ef4444}
+.toast.info{border-left:4px solid var(--r)}
+@keyframes toastIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Panels */
+.panel{display:none}
+.panel.active{display:block}
+
+/* Progress panel */
+.progress-item{display:flex;align-items:center;gap:16px;background:var(--wh);border:1px solid var(--bo);border-radius:var(--ra);padding:16px 20px;margin-bottom:10px}
+.progress-name{flex:1;font-size:14px;font-weight:500}
+.progress-bar-wrap{flex:2;height:8px;background:var(--sa2);border-radius:4px;overflow:hidden}
+.progress-bar-fill{height:100%;background:var(--r);border-radius:4px;transition:width .3s}
+.progress-input{width:70px;padding:6px 10px;border:1px solid var(--bo);border-radius:var(--ra);font-size:14px;text-align:center;font-family:var(--fb)}
+.progress-pct{font-size:13px;color:var(--mu);width:36px}
+
+/* Photos grid */
+.photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+.photo-card{background:var(--wh);border:1px solid var(--bo);border-radius:var(--ra);overflow:hidden}
+.photo-card img{width:100%;height:140px;object-fit:cover;background:var(--sa2)}
+.photo-card-body{padding:10px 12px}
+.photo-caption{font-size:13px;color:var(--dk);margin-bottom:8px}
+.photo-order{font-size:12px;color:var(--mu);margin-bottom:8px}
+
+/* Candidatos split */
+.candidatos-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.candidato-detail-empty{color:var(--mu);font-size:14px;text-align:center;padding:40px 20px}
+.candidato-info-row{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}
+.candidato-info-label{font-size:11px;color:var(--mu);text-transform:uppercase;font-weight:600;letter-spacing:.05em}
+.candidato-info-value{font-size:14px;color:var(--dk)}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.filter-bar select,.filter-bar input{padding:8px 12px;border:1px solid var(--bo);border-radius:var(--ra);font-family:var(--fb);font-size:13.5px;color:var(--dk);background:var(--wh);outline:none}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--r)}
+
+/* Loading spinner */
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:var(--wh);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+.spinner-dark{border-color:rgba(0,0,0,.1);border-top-color:var(--r)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-state{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--mu);gap:10px;font-size:14px}
+
+/* Empty state */
+.empty-state{text-align:center;padding:48px 24px;color:var(--mu)}
+.empty-state p{font-size:14px;margin-top:8px}
+
+/* Quick actions */
+.quick-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+
+/* Responsive helper */
+.row{display:flex;gap:20px;align-items:flex-start}
+.col{flex:1;min-width:0}
+
+/* Section divider */
+.section-divider{height:1px;background:var(--bo);margin:24px 0}
+
+/* Notes textarea in candidatos */
+.notes-area{width:100%;padding:9px 12px;border:1px solid var(--bo);border-radius:var(--ra);font-family:var(--fb);font-size:13.5px;resize:vertical;min-height:80px;outline:none}
+.notes-area:focus{border-color:var(--r)}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN SCREEN ═══ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Fri<span>vatti</span></div>
+    <div class="login-sub">Painel administrativo</div>
+    <div class="login-field">
+      <label for="login-email">E-mail</label>
+      <input type="email" id="login-email" placeholder="admin@frivatti.com.br" autocomplete="email">
+    </div>
+    <div class="login-field">
+      <label for="login-password">Senha</label>
+      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-login" id="btn-entrar" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ═══ ADMIN SCREEN ═══ -->
+<div id="admin-screen">
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">Fri<span>vatti</span></div>
+        <div class="sidebar-sub">Painel administrativo</div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Principal</div>
+        <button class="nav-link active" onclick="showPanel('dashboard',this)">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11l8-9 8 9v7a1 1 0 01-1 1H3a1 1 0 01-1-1v-7z"/></svg>Dashboard
+        </button>
+        <div class="nav-section">Conteúdo</div>
+        <button class="nav-link" onclick="showPanel('banners',this)">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2a1 1 0 01-1-1v-4z"/></svg>Banners
+        </button>
+        <button class="nav-link" onclick="showPanel('blog',this)">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v1H7V5zm0 3h6v1H7V8zm0 3h4v1H7v-1z" clip-rule="evenodd"/></svg>Blog
+        </button>
+        <div class="nav-section">RH</div>
+        <button class="nav-link" onclick="showPanel('vagas',this)">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 6V5a3 3 0 016 0v1h2a1 1 0 011 1v10a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h1zm3-1a1 1 0 00-1 1v1h2V6a1 1 0 00-1-1zm1 7a1 1 0 10-2 0 1 1 0 002 0z" clip-rule="evenodd"/></svg>Vagas
+        </button>
+        <button class="nav-link" onclick="showPanel('candidatos',this)">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/></svg>Candidatos
+        </button>
+        <div class="nav-section">Produtores</div>
+        <button class="nav-link" onclick="showPanel('videos',this)">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/></svg>Vídeos
+        </button>
+        <button class="nav-link" onclick="showPanel('depoimentos',this)">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"/></svg>Depoimentos
+        </button>
+        <div class="nav-section">Produtos</div>
+        <button class="nav-link" onclick="showPanel('produtos',this)">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4zM3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>Produtos
+        </button>
+        <div class="nav-section">Santa Helena</div>
+        <button class="nav-link" onclick="showPanel('progresso',this)">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Progresso da obra
+        </button>
+        <button class="nav-link" onclick="showPanel('fotos',this)">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>Fotos da obra
+        </button>
+        <div class="nav-section">Sistema</div>
+        <a class="nav-link nav-link-ext" href="/index.html" target="_blank">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>Ver site público
+        </a>
+        <button class="nav-link" onclick="doLogout()" style="color:#f87171">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h7a1 1 0 000-2H4V5h6a1 1 0 000-2H3zm11.293 4.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L15.586 12H8a1 1 0 110-2h7.586l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>Sair
+        </button>
+      </nav>
+      <div class="sidebar-user">
+        <div class="sidebar-user-label">Conectado como</div>
+        <div class="sidebar-user-email" id="user-email">—</div>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+      <header class="main-header">
+        <div class="main-title" id="panel-title">Dashboard</div>
+        <div class="header-actions" id="header-actions"></div>
+      </header>
+      <div class="main-content">
+
+        <!-- ═══ DASHBOARD ═══ -->
+        <div class="panel active" id="panel-dashboard">
+          <div class="stats-grid" id="stats-grid">
+            <div class="stat-card"><div class="stat-label">Vagas abertas</div><div class="stat-value" id="stat-vagas">—</div><div class="stat-sub">publicadas</div></div>
+            <div class="stat-card"><div class="stat-label">Candidatos</div><div class="stat-value" id="stat-candidatos">—</div><div class="stat-sub">este mês</div></div>
+            <div class="stat-card"><div class="stat-label">Posts publicados</div><div class="stat-value" id="stat-posts">—</div><div class="stat-sub">no blog</div></div>
+            <div class="stat-card"><div class="stat-label">Depoimentos</div><div class="stat-value" id="stat-depoimentos">—</div><div class="stat-sub">ativos</div></div>
+          </div>
+          <div class="row" style="gap:20px">
+            <div class="col">
+              <div class="card">
+                <div class="card-title">Candidatos recentes</div>
+                <div class="table-wrap">
+                  <table id="recent-candidatos-table">
+                    <thead><tr><th>Nome</th><th>Vaga</th><th>Data</th><th>Status</th></tr></thead>
+                    <tbody id="recent-candidatos-body"><tr><td colspan="4" class="loading-state"><span class="spinner spinner-dark"></span> Carregando...</td></tr></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div style="min-width:220px">
+              <div class="card">
+                <div class="card-title">Ações rápidas</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <button class="btn btn-secondary" onclick="showPanel('vagas',null);openModal('vagas')">+ Nova vaga</button>
+                  <button class="btn btn-secondary" onclick="showPanel('blog',null);openModal('blog')">+ Novo post</button>
+                  <button class="btn btn-secondary" onclick="showPanel('candidatos',null)">Ver candidatos</button>
+                  <button class="btn btn-secondary" onclick="showPanel('banners',null)">Gerenciar banners</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ BANNERS ═══ -->
+        <div class="panel" id="panel-banners">
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Título</th><th>Badge</th><th>Ordem</th><th>Ativo</th><th>Ações</th></tr></thead>
+                <tbody id="banners-body"><tr><td colspan="5" class="loading-state"><span class="spinner spinner-dark"></span> Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ BLOG ═══ -->
+        <div class="panel" id="panel-blog">
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Título</th><th>Categoria</th><th>Status</th><th>Publicado em</th><th>Ações</th></tr></thead>
+                <tbody id="blog-body"><tr><td colspan="5" class="loading-state"><span class="spinner spinner-dark"></span> Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ VAGAS ═══ -->
+        <div class="panel" id="panel-vagas">
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Título</th><th>Local</th><th>Tipo</th><th>Status</th><th>Destaque</th><th>Ações</th></tr></thead>
+                <tbody id="vagas-body"><tr><td colspan="6" class="loading-state"><span class="spinner spinner-dark"></span> Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ CANDIDATOS ═══ -->
+        <div class="panel" id="panel-candidatos">
+          <div class="filter-bar">
+            <select id="filter-vaga" onchange="loadCandidatos()"><option value="">Todas as vagas</option></select>
+            <select id="filter-status-cand" onchange="loadCandidatos()">
+              <option value="">Todos os status</option>
+              <option value="novo">Novo</option>
+              <option value="analise">Em análise</option>
+              <option value="aprovado">Aprovado</option>
+              <option value="reprovado">Reprovado</option>
+              <option value="arquivado">Arquivado</option>
+            </select>
+          </div>
+          <div class="candidatos-layout">
+            <div class="card" style="padding:0;overflow:hidden">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Nome</th><th>Vaga</th><th>Cidade</th><th>Data</th><th>Status</th></tr></thead>
+                  <tbody id="candidatos-body"><tr><td colspan="5" class="loading-state"><span class="spinner spinner-dark"></span> Carregando...</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card" id="candidato-detail">
+              <div class="candidato-detail-empty">Selecione um candidato para ver os detalhes</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ VÍDEOS ═══ -->
+        <div class="panel" id="panel-videos">
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Título</th><th>Categoria</th><th>Duração</th><th>Status</th><th>Ordem</th><th>Ações</th></tr></thead>
+                <tbody id="videos-body"><tr><td colspan="6" class="loading-state"><span class="spinner spinner-dark"></span> Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ DEPOIMENTOS ═══ -->
+        <div class="panel" id="panel-depoimentos">
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Nome</th><th>Tipo</th><th>Cargo</th><th>Ativo</th><th>Ordem</th><th>Ações</th></tr></thead>
+                <tbody id="depoimentos-body"><tr><td colspan="6" class="loading-state"><span class="spinner spinner-dark"></span> Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ PRODUTOS ═══ -->
+        <div class="panel" id="panel-produtos">
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Nome</th><th>Categoria</th><th>Ativo</th><th>Ordem</th><th>Ações</th></tr></thead>
+                <tbody id="produtos-body"><tr><td colspan="5" class="loading-state"><span class="spinner spinner-dark"></span> Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ PROGRESSO DA OBRA ═══ -->
+        <div class="panel" id="panel-progresso">
+          <div style="max-width:700px">
+            <div id="progresso-list"></div>
+            <div style="margin-top:20px">
+              <button class="btn btn-primary" onclick="saveProgresso()">Salvar alterações</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ FOTOS DA OBRA ═══ -->
+        <div class="panel" id="panel-fotos">
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-title">Adicionar nova foto</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Imagem</label>
+                <div class="upload-group">
+                  <input type="file" id="fotos-file" class="hidden" accept="image/*" onchange="uploadFotoFile(this)">
+                  <button class="btn btn-ghost btn-sm upload-btn" onclick="document.getElementById('fotos-file').click()">Fazer upload</button>
+                  <img id="fotos-preview" class="upload-preview hidden" src="" alt="preview">
+                </div>
+                <input type="hidden" id="fotos-image-url">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Legenda</label>
+                <input class="form-control" id="fotos-caption" placeholder="Descrição da foto">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ordem</label>
+                <input class="form-control" id="fotos-order" type="number" value="0" min="0">
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="addFoto()">Adicionar foto</button>
+          </div>
+          <div class="photos-grid" id="fotos-grid"></div>
+        </div>
+
+      </div><!-- /main-content -->
+    </div><!-- /main-area -->
+  </div><!-- /admin-layout -->
+</div><!-- /admin-screen -->
+
+<!-- ═══ MODAL ═══ -->
+<div class="modal-overlay hidden" id="modal-overlay" onclick="handleModalOverlayClick(event)">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Novo item</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-modal" onclick="saveModal()">
+        <span id="save-spinner" class="spinner hidden"></span>Salvar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONFIRM POPUP ═══ -->
+<div class="confirm-popup hidden" id="confirm-popup">
+  <div class="confirm-card">
+    <div class="confirm-title">Confirmar exclusão</div>
+    <div class="confirm-text" id="confirm-text">Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.</div>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost btn-sm" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn btn-danger btn-sm" id="btn-confirm-delete" onclick="executeDelete()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOAST CONTAINER ═══ -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ═══════════════════════════════════════════════
+// SUPABASE INIT
+// ═══════════════════════════════════════════════
+const SUPA_URL = 'https://dfnmsgjsglsujwvmjqdw.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmbm1zZ2pzZ2xzdWp3dm1qcWR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTk5NTksImV4cCI6MjA5NTI5NTk1OX0.P-slnFyUFsP2eQXyYsyuXZw6MWsWIbnOnkhkf0RvX8U';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ═══════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════
+async function initAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) showAdminScreen(session.user);
+  else showLoginScreen();
+
+  sb.auth.onAuthStateChange((event, session) => {
+    if (session) showAdminScreen(session.user);
+    else showLoginScreen();
+  });
+}
+
+function showLoginScreen() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-screen').style.display = 'none';
+}
+
+function showAdminScreen(user) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-screen').style.display = 'block';
+  document.getElementById('user-email').textContent = user.email;
+  loadDashboard();
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('btn-entrar');
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  if (!email || !password) { showLoginError('Preencha e-mail e senha.'); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Entrando...';
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    showLoginError('E-mail ou senha incorretos.');
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+  }
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+}
+
+document.getElementById('login-password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ═══════════════════════════════════════════════
+// PANEL NAVIGATION
+// ═══════════════════════════════════════════════
+const panelTitles = {
+  dashboard: 'Dashboard',
+  banners: 'Banners',
+  blog: 'Blog',
+  vagas: 'Vagas',
+  candidatos: 'Candidatos',
+  videos: 'Vídeos',
+  depoimentos: 'Depoimentos',
+  produtos: 'Produtos',
+  progresso: 'Progresso da obra',
+  fotos: 'Fotos da obra'
+};
+
+const panelActions = {
+  banners: () => `<button class="btn btn-primary btn-sm" onclick="openModal('banners')">+ Novo banner</button>`,
+  blog: () => `<button class="btn btn-primary btn-sm" onclick="openModal('blog')">+ Novo post</button>`,
+  vagas: () => `<button class="btn btn-primary btn-sm" onclick="openModal('vagas')">+ Nova vaga</button>`,
+  videos: () => `<button class="btn btn-primary btn-sm" onclick="openModal('videos')">+ Novo vídeo</button>`,
+  depoimentos: () => `<button class="btn btn-primary btn-sm" onclick="openModal('depoimentos')">+ Novo depoimento</button>`,
+  produtos: () => `<button class="btn btn-primary btn-sm" onclick="openModal('produtos')">+ Novo produto</button>`,
+};
+
+let currentPanel = 'dashboard';
+
+function showPanel(name, linkEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  if (linkEl) linkEl.classList.add('active');
+  document.getElementById('panel-title').textContent = panelTitles[name] || name;
+  const ha = document.getElementById('header-actions');
+  ha.innerHTML = panelActions[name] ? panelActions[name]() : '';
+  currentPanel = name;
+  loadPanel(name);
+}
+
+function loadPanel(name) {
+  switch(name) {
+    case 'dashboard': loadDashboard(); break;
+    case 'banners': loadBanners(); break;
+    case 'blog': loadBlog(); break;
+    case 'vagas': loadVagas(); break;
+    case 'candidatos': loadCandidatos(); break;
+    case 'videos': loadVideos(); break;
+    case 'depoimentos': loadDepoimentos(); break;
+    case 'produtos': loadProdutos(); break;
+    case 'progresso': loadProgresso(); break;
+    case 'fotos': loadFotos(); break;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════
+function toast(msg, type = 'info') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+  t.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ═══════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════
+let modalContext = null; // { panel, item (null=new, obj=edit) }
+
+function openModal(panel, item = null) {
+  modalContext = { panel, item };
+  document.getElementById('modal-title').textContent = item ? 'Editar' : 'Novo';
+  document.getElementById('modal-body').innerHTML = buildModalForm(panel, item);
+  document.getElementById('modal-overlay').classList.remove('hidden');
+  document.getElementById('save-spinner').classList.add('hidden');
+  document.getElementById('btn-save-modal').disabled = false;
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.add('hidden');
+  modalContext = null;
+}
+
+function handleModalOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+async function saveModal() {
+  if (!modalContext) return;
+  const btn = document.getElementById('btn-save-modal');
+  const sp = document.getElementById('save-spinner');
+  btn.disabled = true;
+  sp.classList.remove('hidden');
+  try {
+    await saveItem(modalContext.panel, modalContext.item);
+    closeModal();
+    loadPanel(currentPanel);
+    toast('Salvo com sucesso!', 'success');
+  } catch(e) {
+    toast(e.message || 'Erro ao salvar', 'error');
+  }
+  btn.disabled = false;
+  sp.classList.add('hidden');
+}
+
+// ═══════════════════════════════════════════════
+// CONFIRM DELETE
+// ═══════════════════════════════════════════════
+let deleteContext = null;
+
+function confirmDelete(panel, id, label = '') {
+  deleteContext = { panel, id };
+  document.getElementById('confirm-text').textContent =
+    `Tem certeza que deseja excluir "${label || 'este item'}"? Esta ação não pode ser desfeita.`;
+  document.getElementById('confirm-popup').classList.remove('hidden');
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-popup').classList.add('hidden');
+  deleteContext = null;
+}
+
+async function executeDelete() {
+  if (!deleteContext) return;
+  const { panel, id } = deleteContext;
+  const tableMap = {
+    banners: 'banners', blog: 'blog_posts', vagas: 'vagas',
+    videos: 'videos', depoimentos: 'depoimentos', produtos: 'produtos',
+    fotos: 'obra_fotos'
+  };
+  const table = tableMap[panel];
+  if (!table) { closeConfirm(); return; }
+  const { error } = await sb.from(table).delete().eq('id', id);
+  if (error) { toast(error.message, 'error'); }
+  else { toast('Excluído com sucesso.', 'success'); loadPanel(currentPanel); }
+  closeConfirm();
+}
+
+// ═══════════════════════════════════════════════
+// IMAGE UPLOAD HELPER
+// ═══════════════════════════════════════════════
+async function uploadImage(file) {
+  const ext = file.name.split('.').pop();
+  const path = `uploads/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+  const { data, error } = await sb.storage.from('media').upload(path, file, { upsert: true });
+  if (error) throw new Error(error.message);
+  const { data: urlData } = sb.storage.from('media').getPublicUrl(path);
+  return urlData.publicUrl;
+}
+
+function setupUploadButton(btnId, fileId, previewId, inputId) {
+  const btn = document.getElementById(btnId);
+  const fileInput = document.getElementById(fileId);
+  if (!btn || !fileInput) return;
+  btn.onclick = () => fileInput.click();
+  fileInput.onchange = async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    try {
+      const url = await uploadImage(file);
+      document.getElementById(inputId).value = url;
+      const prev = document.getElementById(previewId);
+      if (prev) { prev.src = url; prev.classList.remove('hidden'); }
+      toast('Imagem enviada!', 'success');
+    } catch(e) { toast(e.message, 'error'); }
+    btn.disabled = false;
+    btn.textContent = 'Fazer upload';
+  };
+}
+
+async function uploadFotoFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  try {
+    const url = await uploadImage(file);
+    document.getElementById('fotos-image-url').value = url;
+    const prev = document.getElementById('fotos-preview');
+    prev.src = url; prev.classList.remove('hidden');
+    toast('Imagem enviada!', 'success');
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ═══════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════
+async function loadDashboard() {
+  // Stats
+  async function getCount(table, filters = []) {
+    let q = sb.from(table).select('*', { count: 'exact', head: true });
+    filters.forEach(f => q = q.filter(f[0], f[1], f[2]));
+    const { count } = await q;
+    return count ?? 0;
+  }
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+  const [vagasCount, candidatosCount, postsCount, depCount] = await Promise.all([
+    getCount('vagas', [['status', 'eq', 'published']]),
+    getCount('candidatos', [['created_at', 'gte', startOfMonth]]),
+    getCount('blog_posts', [['status', 'eq', 'published']]),
+    getCount('depoimentos', [['active', 'eq', true]])
+  ]);
+
+  document.getElementById('stat-vagas').textContent = vagasCount;
+  document.getElementById('stat-candidatos').textContent = candidatosCount;
+  document.getElementById('stat-posts').textContent = postsCount;
+  document.getElementById('stat-depoimentos').textContent = depCount;
+
+  // Recent candidatos
+  const { data: recents, error } = await sb.from('candidatos')
+    .select('id, name, vaga_id, city, created_at, status, vagas(title)')
+    .order('created_at', { ascending: false })
+    .limit(5);
+
+  const tbody = document.getElementById('recent-candidatos-body');
+  if (error || !recents || !recents.length) {
+    tbody.innerHTML = `<tr><td colspan="4" class="empty-state">Nenhum candidato ainda.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = recents.map(c => `
+    <tr>
+      <td>${esc(c.name)}</td>
+      <td>${esc(c.vagas?.title || '—')}</td>
+      <td>${fmtDate(c.created_at)}</td>
+      <td>${candBadge(c.status)}</td>
+    </tr>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+// BANNERS
+// ═══════════════════════════════════════════════
+async function loadBanners() {
+  const tbody = document.getElementById('banners-body');
+  tbody.innerHTML = loadingRow(5);
+  const { data, error } = await sb.from('banners').select('*').order('order_index');
+  if (error) { tbody.innerHTML = errorRow(5, error.message); return; }
+  if (!data.length) { tbody.innerHTML = emptyRow(5); return; }
+  tbody.innerHTML = data.map(b => `
+    <tr>
+      <td><strong>${esc(b.title || '—')}</strong></td>
+      <td>${esc(b.badge_text || '—')}</td>
+      <td>${b.order_index ?? '—'}</td>
+      <td>${b.active ? '<span class="badge badge-green">Sim</span>' : '<span class="badge badge-gray">Não</span>'}</td>
+      <td><div class="table-actions">
+        <button class="btn btn-ghost btn-xs" onclick="editItem('banners',${b.id})">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('banners',${b.id},'${esc(b.title)}')">Excluir</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function buildBannersForm(item) {
+  const v = item || {};
+  return `
+  <div class="form-grid">
+    <div class="form-group full"><label class="form-label">Título</label><input class="form-control" id="f-title" value="${esc(v.title||'')}" placeholder="Título do banner"></div>
+    <div class="form-group"><label class="form-label">Badge <span>(opcional)</span></label><input class="form-control" id="f-badge_text" value="${esc(v.badge_text||'')}" placeholder="ex: Novidade"></div>
+    <div class="form-group"><label class="form-label">Subtítulo</label><input class="form-control" id="f-subtitle" value="${esc(v.subtitle||'')}" placeholder="Subtítulo"></div>
+    <div class="form-group full">
+      <label class="form-label">Imagem</label>
+      <div class="upload-group">
+        <input type="file" id="f-img-file" class="hidden" accept="image/*">
+        <button class="btn btn-ghost btn-sm" id="f-img-btn">Fazer upload</button>
+        <input class="form-control" id="f-image_url" value="${esc(v.image_url||'')}" placeholder="URL da imagem" style="flex:1;min-width:200px">
+        <img id="f-img-preview" class="upload-preview ${v.image_url?'':'hidden'}" src="${v.image_url||''}">
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">CTA principal — texto</label><input class="form-control" id="f-cta_primary_text" value="${esc(v.cta_primary_text||'')}" placeholder="ex: Saiba mais"></div>
+    <div class="form-group"><label class="form-label">CTA principal — URL</label><input class="form-control" id="f-cta_primary_url" value="${esc(v.cta_primary_url||'')}" placeholder="/pagina"></div>
+    <div class="form-group"><label class="form-label">CTA secundário — texto</label><input class="form-control" id="f-cta_secondary_text" value="${esc(v.cta_secondary_text||'')}" placeholder="ex: Contato"></div>
+    <div class="form-group"><label class="form-label">CTA secundário — URL</label><input class="form-control" id="f-cta_secondary_url" value="${esc(v.cta_secondary_url||'')}" placeholder="/contato"></div>
+    <div class="form-group"><label class="form-label">Ordem</label><input class="form-control" id="f-order_index" type="number" value="${v.order_index??0}" min="0"></div>
+    <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:4px">
+      <label class="form-check"><input type="checkbox" id="f-active" ${v.active?'checked':''}><span class="form-check-label">Ativo</span></label>
+    </div>
+  </div>`;
+}
+
+async function saveBanners(item) {
+  const payload = {
+    title: val('f-title'), badge_text: val('f-badge_text'), subtitle: val('f-subtitle'),
+    image_url: val('f-image_url'), cta_primary_text: val('f-cta_primary_text'),
+    cta_primary_url: val('f-cta_primary_url'), cta_secondary_text: val('f-cta_secondary_text'),
+    cta_secondary_url: val('f-cta_secondary_url'), order_index: intVal('f-order_index'),
+    active: document.getElementById('f-active').checked
+  };
+  if (item?.id) {
+    const { error } = await sb.from('banners').update(payload).eq('id', item.id);
+    if (error) throw error;
+  } else {
+    const { error } = await sb.from('banners').insert(payload);
+    if (error) throw error;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// BLOG
+// ═══════════════════════════════════════════════
+async function loadBlog() {
+  const tbody = document.getElementById('blog-body');
+  tbody.innerHTML = loadingRow(5);
+  const { data, error } = await sb.from('blog_posts').select('*').order('created_at', { ascending: false });
+  if (error) { tbody.innerHTML = errorRow(5, error.message); return; }
+  if (!data.length) { tbody.innerHTML = emptyRow(5); return; }
+  tbody.innerHTML = data.map(p => `
+    <tr>
+      <td><strong>${esc(p.title)}</strong></td>
+      <td>${esc(p.category||'—')}</td>
+      <td>${blogStatusBadge(p.status)}</td>
+      <td>${p.published_at ? fmtDate(p.published_at) : '—'}</td>
+      <td><div class="table-actions">
+        <button class="btn btn-ghost btn-xs" onclick="editItem('blog',${p.id})">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('blog',${p.id},'${esc(p.title)}')">Excluir</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function buildBlogForm(item) {
+  const v = item || {};
+  const statusOpts = ['published','draft'].map(s =>
+    `<option value="${s}" ${v.status===s?'selected':''}>${s==='published'?'Publicado':'Rascunho'}</option>`).join('');
+  return `
+  <div class="form-grid">
+    <div class="form-group full"><label class="form-label">Título</label><input class="form-control" id="f-title" value="${esc(v.title||'')}" placeholder="Título do post"></div>
+    <div class="form-group"><label class="form-label">Categoria</label><input class="form-control" id="f-category" value="${esc(v.category||'')}" placeholder="ex: Nutrição"></div>
+    <div class="form-group"><label class="form-label">Status</label><select class="form-control" id="f-status">${statusOpts}</select></div>
+    <div class="form-group"><label class="form-label">Publicado em</label><input class="form-control" id="f-published_at" type="date" value="${v.published_at?v.published_at.slice(0,10):''}"></div>
+    <div class="form-group full">
+      <label class="form-label">Imagem de capa</label>
+      <div class="upload-group">
+        <input type="file" id="f-img-file" class="hidden" accept="image/*">
+        <button class="btn btn-ghost btn-sm" id="f-img-btn">Fazer upload</button>
+        <input class="form-control" id="f-image_url" value="${esc(v.image_url||'')}" placeholder="URL da imagem" style="flex:1;min-width:200px">
+        <img id="f-img-preview" class="upload-preview ${v.image_url?'':'hidden'}" src="${v.image_url||''}">
+      </div>
+    </div>
+    <div class="form-group full"><label class="form-label">Resumo</label><textarea class="form-control" id="f-excerpt" rows="2">${esc(v.excerpt||'')}</textarea></div>
+    <div class="form-group full"><label class="form-label">Conteúdo</label><textarea class="form-control" id="f-content" rows="8">${esc(v.content||'')}</textarea></div>
+  </div>`;
+}
+
+async function saveBlog(item) {
+  const payload = {
+    title: val('f-title'), category: val('f-category'), status: val('f-status'),
+    published_at: val('f-published_at') || null, image_url: val('f-image_url'),
+    excerpt: val('f-excerpt'), content: val('f-content')
+  };
+  if (item?.id) {
+    const { error } = await sb.from('blog_posts').update(payload).eq('id', item.id);
+    if (error) throw error;
+  } else {
+    const { error } = await sb.from('blog_posts').insert(payload);
+    if (error) throw error;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// VAGAS
+// ═══════════════════════════════════════════════
+async function loadVagas() {
+  const tbody = document.getElementById('vagas-body');
+  tbody.innerHTML = loadingRow(6);
+  const { data, error } = await sb.from('vagas').select('*').order('created_at', { ascending: false });
+  if (error) { tbody.innerHTML = errorRow(6, error.message); return; }
+  if (!data.length) { tbody.innerHTML = emptyRow(6); return; }
+  tbody.innerHTML = data.map(v => `
+    <tr>
+      <td><strong>${esc(v.title)}</strong></td>
+      <td>${esc(v.location||'—')}</td>
+      <td>${esc(v.type||'—')}</td>
+      <td>${vagaStatusBadge(v.status)}</td>
+      <td>${v.featured?'<span class="badge badge-orange">Sim</span>':'<span class="badge badge-gray">Não</span>'}</td>
+      <td><div class="table-actions">
+        <button class="btn btn-ghost btn-xs" onclick="editItem('vagas',${v.id})">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('vagas',${v.id},'${esc(v.title)}')">Excluir</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function buildVagasForm(item) {
+  const v = item || {};
+  const types = ['CLT','Estágio','PJ','Temporário'];
+  const typeOpts = types.map(t => `<option value="${t}" ${v.type===t?'selected':''}>${t}</option>`).join('');
+  const statusOpts = [['published','Publicada'],['draft','Rascunho'],['closed','Encerrada']]
+    .map(([s,l]) => `<option value="${s}" ${v.status===s?'selected':''}>${l}</option>`).join('');
+  return `
+  <div class="form-grid">
+    <div class="form-group full"><label class="form-label">Título da vaga</label><input class="form-control" id="f-title" value="${esc(v.title||'')}" placeholder="ex: Auxiliar de granjas"></div>
+    <div class="form-group"><label class="form-label">Local</label><input class="form-control" id="f-location" value="${esc(v.location||'')}" placeholder="ex: Cascavel, PR"></div>
+    <div class="form-group"><label class="form-label">Tipo</label><select class="form-control" id="f-type">${typeOpts}</select></div>
+    <div class="form-group"><label class="form-label">Área</label><input class="form-control" id="f-area" value="${esc(v.area||'')}" placeholder="ex: Produção"></div>
+    <div class="form-group"><label class="form-label">Status</label><select class="form-control" id="f-status">${statusOpts}</select></div>
+    <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:4px">
+      <label class="form-check"><input type="checkbox" id="f-featured" ${v.featured?'checked':''}><span class="form-check-label">Destaque</span></label>
+    </div>
+    <div class="form-group full"><label class="form-label">Descrição</label><textarea class="form-control" id="f-description" rows="4">${esc(v.description||'')}</textarea></div>
+    <div class="form-group full"><label class="form-label">Requisitos</label><textarea class="form-control" id="f-requirements" rows="3">${esc(v.requirements||'')}</textarea></div>
+    <div class="form-group full"><label class="form-label">Benefícios</label><textarea class="form-control" id="f-benefits" rows="3">${esc(v.benefits||'')}</textarea></div>
+  </div>`;
+}
+
+async function saveVagas(item) {
+  const payload = {
+    title: val('f-title'), location: val('f-location'), type: val('f-type'),
+    area: val('f-area'), status: val('f-status'),
+    featured: document.getElementById('f-featured').checked,
+    description: val('f-description'), requirements: val('f-requirements'), benefits: val('f-benefits')
+  };
+  if (item?.id) {
+    const { error } = await sb.from('vagas').update(payload).eq('id', item.id);
+    if (error) throw error;
+  } else {
+    const { error } = await sb.from('vagas').insert(payload);
+    if (error) throw error;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// CANDIDATOS
+// ═══════════════════════════════════════════════
+let candidatosList = [];
+
+async function loadCandidatos() {
+  const tbody = document.getElementById('candidatos-body');
+  tbody.innerHTML = loadingRow(5);
+
+  // Load vagas filter options once
+  const filterVaga = document.getElementById('filter-vaga');
+  if (filterVaga.options.length <= 1) {
+    const { data: vList } = await sb.from('vagas').select('id,title').order('title');
+    (vList||[]).forEach(v => {
+      const o = document.createElement('option');
+      o.value = v.id; o.textContent = v.title;
+      filterVaga.appendChild(o);
+    });
+  }
+
+  let q = sb.from('candidatos').select('id, name, city, created_at, status, vaga_id, vagas(title)');
+  const vagaFilter = document.getElementById('filter-vaga').value;
+  const statusFilter = document.getElementById('filter-status-cand').value;
+  if (vagaFilter) q = q.eq('vaga_id', vagaFilter);
+  if (statusFilter) q = q.eq('status', statusFilter);
+  q = q.order('created_at', { ascending: false });
+
+  const { data, error } = await q;
+  candidatosList = data || [];
+  if (error) { tbody.innerHTML = errorRow(5, error.message); return; }
+  if (!data.length) { tbody.innerHTML = emptyRow(5); return; }
+  tbody.innerHTML = data.map(c => `
+    <tr class="clickable-row" onclick="showCandidatoDetail(${c.id})">
+      <td><strong>${esc(c.name)}</strong></td>
+      <td>${esc(c.vagas?.title||'—')}</td>
+      <td>${esc(c.city||'—')}</td>
+      <td>${fmtDate(c.created_at)}</td>
+      <td>${candBadge(c.status)}</td>
+    </tr>`).join('');
+}
+
+async function showCandidatoDetail(id) {
+  const detailEl = document.getElementById('candidato-detail');
+  detailEl.innerHTML = `<div class="loading-state"><span class="spinner spinner-dark"></span> Carregando...</div>`;
+
+  const { data: c, error } = await sb.from('candidatos')
+    .select('*, vagas(title)')
+    .eq('id', id).single();
+
+  if (error || !c) { detailEl.innerHTML = '<div class="candidato-detail-empty">Erro ao carregar candidato.</div>'; return; }
+
+  const statusOpts = [['novo','Novo'],['analise','Em análise'],['aprovado','Aprovado'],['reprovado','Reprovado'],['arquivado','Arquivado']]
+    .map(([s,l]) => `<option value="${s}" ${c.status===s?'selected':''}>${l}</option>`).join('');
+
+  detailEl.innerHTML = `
+    <div style="font-family:var(--fd);font-size:16px;font-weight:600;margin-bottom:16px">${esc(c.name)}</div>
+    <div class="candidato-info-row"><div class="candidato-info-label">Vaga</div><div class="candidato-info-value">${esc(c.vagas?.title||'—')}</div></div>
+    <div class="candidato-info-row"><div class="candidato-info-label">E-mail</div><div class="candidato-info-value"><a href="mailto:${esc(c.email)}">${esc(c.email||'—')}</a></div></div>
+    <div class="candidato-info-row"><div class="candidato-info-label">Telefone</div><div class="candidato-info-value">${esc(c.phone||'—')}</div></div>
+    <div class="candidato-info-row"><div class="candidato-info-label">Cidade</div><div class="candidato-info-value">${esc(c.city||'—')}</div></div>
+    <div class="candidato-info-row"><div class="candidato-info-label">Candidatura</div><div class="candidato-info-value">${fmtDateTime(c.created_at)}</div></div>
+    ${c.cv_url ? `<div class="candidato-info-row"><div class="candidato-info-label">Currículo</div><div class="candidato-info-value"><a href="${c.cv_url}" target="_blank" class="btn btn-ghost btn-xs">Baixar CV</a></div></div>` : ''}
+    ${c.message ? `<div class="candidato-info-row"><div class="candidato-info-label">Mensagem</div><div class="candidato-info-value">${esc(c.message)}</div></div>` : ''}
+    <div class="section-divider"></div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-control" id="cand-status-${id}">${statusOpts}</select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Observações internas</label>
+      <textarea class="notes-area" id="cand-notes-${id}" rows="4" placeholder="Adicione notas sobre este candidato...">${esc(c.notes||'')}</textarea>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="saveCandidatoStatus(${id})">Salvar alterações</button>`;
+}
+
+async function saveCandidatoStatus(id) {
+  const status = document.getElementById(`cand-status-${id}`).value;
+  const notes = document.getElementById(`cand-notes-${id}`).value;
+  const { error } = await sb.from('candidatos').update({ status, notes }).eq('id', id);
+  if (error) { toast(error.message, 'error'); return; }
+  toast('Status atualizado!', 'success');
+  loadCandidatos();
+}
+
+// ═══════════════════════════════════════════════
+// VÍDEOS
+// ═══════════════════════════════════════════════
+async function loadVideos() {
+  const tbody = document.getElementById('videos-body');
+  tbody.innerHTML = loadingRow(6);
+  const { data, error } = await sb.from('videos').select('*').order('order_index');
+  if (error) { tbody.innerHTML = errorRow(6, error.message); return; }
+  if (!data.length) { tbody.innerHTML = emptyRow(6); return; }
+  tbody.innerHTML = data.map(v => `
+    <tr>
+      <td><strong>${esc(v.title)}</strong></td>
+      <td>${esc(v.category||'—')}</td>
+      <td>${esc(v.duration||'—')}</td>
+      <td>${v.status==='published'?'<span class="badge badge-green">Publicado</span>':'<span class="badge badge-yellow">Rascunho</span>'}</td>
+      <td>${v.order_index??'—'}</td>
+      <td><div class="table-actions">
+        <button class="btn btn-ghost btn-xs" onclick="editItem('videos',${v.id})">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('videos',${v.id},'${esc(v.title)}')">Excluir</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function buildVideosForm(item) {
+  const v = item || {};
+  const statusOpts = ['published','draft'].map(s =>
+    `<option value="${s}" ${v.status===s?'selected':''}>${s==='published'?'Publicado':'Rascunho'}</option>`).join('');
+  return `
+  <div class="form-grid">
+    <div class="form-group full"><label class="form-label">Título</label><input class="form-control" id="f-title" value="${esc(v.title||'')}" placeholder="Título do vídeo"></div>
+    <div class="form-group"><label class="form-label">Categoria</label><input class="form-control" id="f-category" value="${esc(v.category||'')}" placeholder="ex: Depoimento"></div>
+    <div class="form-group"><label class="form-label">Duração</label><input class="form-control" id="f-duration" value="${esc(v.duration||'')}" placeholder="ex: 3:42"></div>
+    <div class="form-group"><label class="form-label">Status</label><select class="form-control" id="f-status">${statusOpts}</select></div>
+    <div class="form-group"><label class="form-label">Ordem</label><input class="form-control" id="f-order_index" type="number" value="${v.order_index??0}" min="0"></div>
+    <div class="form-group full">
+      <label class="form-label">Thumbnail</label>
+      <div class="upload-group">
+        <input type="file" id="f-img-file" class="hidden" accept="image/*">
+        <button class="btn btn-ghost btn-sm" id="f-img-btn">Fazer upload</button>
+        <input class="form-control" id="f-thumbnail_url" value="${esc(v.thumbnail_url||'')}" placeholder="URL da thumbnail" style="flex:1;min-width:200px">
+        <img id="f-img-preview" class="upload-preview ${v.thumbnail_url?'':'hidden'}" src="${v.thumbnail_url||''}">
+      </div>
+    </div>
+    <div class="form-group full"><label class="form-label">URL do vídeo</label><input class="form-control" id="f-video_url" value="${esc(v.video_url||'')}" placeholder="https://youtube.com/..."></div>
+    <div class="form-group full"><label class="form-label">Descrição</label><textarea class="form-control" id="f-description" rows="3">${esc(v.description||'')}</textarea></div>
+  </div>`;
+}
+
+async function saveVideos(item) {
+  const payload = {
+    title: val('f-title'), category: val('f-category'), duration: val('f-duration'),
+    status: val('f-status'), order_index: intVal('f-order_index'),
+    thumbnail_url: val('f-thumbnail_url'), video_url: val('f-video_url'), description: val('f-description')
+  };
+  if (item?.id) {
+    const { error } = await sb.from('videos').update(payload).eq('id', item.id);
+    if (error) throw error;
+  } else {
+    const { error } = await sb.from('videos').insert(payload);
+    if (error) throw error;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// DEPOIMENTOS
+// ═══════════════════════════════════════════════
+async function loadDepoimentos() {
+  const tbody = document.getElementById('depoimentos-body');
+  tbody.innerHTML = loadingRow(6);
+  const { data, error } = await sb.from('depoimentos').select('*').order('order_index');
+  if (error) { tbody.innerHTML = errorRow(6, error.message); return; }
+  if (!data.length) { tbody.innerHTML = emptyRow(6); return; }
+  tbody.innerHTML = data.map(d => `
+    <tr>
+      <td><strong>${esc(d.name)}</strong></td>
+      <td>${d.type==='parceiro'?'<span class="badge badge-blue">Parceiro</span>':'<span class="badge badge-orange">Colaborador</span>'}</td>
+      <td>${esc(d.role||'—')}</td>
+      <td>${d.active?'<span class="badge badge-green">Sim</span>':'<span class="badge badge-gray">Não</span>'}</td>
+      <td>${d.order_index??'—'}</td>
+      <td><div class="table-actions">
+        <button class="btn btn-ghost btn-xs" onclick="editItem('depoimentos',${d.id})">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('depoimentos',${d.id},'${esc(d.name)}')">Excluir</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function buildDepoimentosForm(item) {
+  const v = item || {};
+  const typeOpts = ['colaborador','parceiro'].map(t =>
+    `<option value="${t}" ${v.type===t?'selected':''}>${t==='colaborador'?'Colaborador':'Parceiro'}</option>`).join('');
+  return `
+  <div class="form-grid">
+    <div class="form-group"><label class="form-label">Nome</label><input class="form-control" id="f-name" value="${esc(v.name||'')}" placeholder="Nome da pessoa"></div>
+    <div class="form-group"><label class="form-label">Cargo / Empresa</label><input class="form-control" id="f-role" value="${esc(v.role||'')}" placeholder="ex: Produtor rural"></div>
+    <div class="form-group"><label class="form-label">Tipo</label><select class="form-control" id="f-type">${typeOpts}</select></div>
+    <div class="form-group"><label class="form-label">Ordem</label><input class="form-control" id="f-order_index" type="number" value="${v.order_index??0}" min="0"></div>
+    <div class="form-group full">
+      <label class="form-label">Avatar</label>
+      <div class="upload-group">
+        <input type="file" id="f-img-file" class="hidden" accept="image/*">
+        <button class="btn btn-ghost btn-sm" id="f-img-btn">Fazer upload</button>
+        <input class="form-control" id="f-avatar_url" value="${esc(v.avatar_url||'')}" placeholder="URL do avatar" style="flex:1;min-width:200px">
+        <img id="f-img-preview" class="upload-preview ${v.avatar_url?'':'hidden'}" src="${v.avatar_url||''}">
+      </div>
+    </div>
+    <div class="form-group full"><label class="form-label">Depoimento</label><textarea class="form-control" id="f-quote" rows="4">${esc(v.quote||'')}</textarea></div>
+    <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:4px">
+      <label class="form-check"><input type="checkbox" id="f-active" ${v.active?'checked':''}><span class="form-check-label">Ativo</span></label>
+    </div>
+  </div>`;
+}
+
+async function saveDepoimentos(item) {
+  const payload = {
+    name: val('f-name'), role: val('f-role'), type: val('f-type'),
+    order_index: intVal('f-order_index'), avatar_url: val('f-avatar_url'),
+    quote: val('f-quote'), active: document.getElementById('f-active').checked
+  };
+  if (item?.id) {
+    const { error } = await sb.from('depoimentos').update(payload).eq('id', item.id);
+    if (error) throw error;
+  } else {
+    const { error } = await sb.from('depoimentos').insert(payload);
+    if (error) throw error;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// PRODUTOS
+// ═══════════════════════════════════════════════
+async function loadProdutos() {
+  const tbody = document.getElementById('produtos-body');
+  tbody.innerHTML = loadingRow(5);
+  const { data, error } = await sb.from('produtos').select('*').order('order_index');
+  if (error) { tbody.innerHTML = errorRow(5, error.message); return; }
+  if (!data.length) { tbody.innerHTML = emptyRow(5); return; }
+  tbody.innerHTML = data.map(p => `
+    <tr>
+      <td><strong>${esc(p.name)}</strong></td>
+      <td>${esc(p.category||'—')}</td>
+      <td>${p.active?'<span class="badge badge-green">Sim</span>':'<span class="badge badge-gray">Não</span>'}</td>
+      <td>${p.order_index??'—'}</td>
+      <td><div class="table-actions">
+        <button class="btn btn-ghost btn-xs" onclick="editItem('produtos',${p.id})">Editar</button>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('produtos',${p.id},'${esc(p.name)}')">Excluir</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function buildProdutosForm(item) {
+  const v = item || {};
+  return `
+  <div class="form-grid">
+    <div class="form-group full"><label class="form-label">Nome do produto</label><input class="form-control" id="f-name" value="${esc(v.name||'')}" placeholder="Nome do produto"></div>
+    <div class="form-group"><label class="form-label">Categoria</label><input class="form-control" id="f-category" value="${esc(v.category||'')}" placeholder="ex: Cortes especiais"></div>
+    <div class="form-group"><label class="form-label">Ordem</label><input class="form-control" id="f-order_index" type="number" value="${v.order_index??0}" min="0"></div>
+    <div class="form-group full">
+      <label class="form-label">Imagem</label>
+      <div class="upload-group">
+        <input type="file" id="f-img-file" class="hidden" accept="image/*">
+        <button class="btn btn-ghost btn-sm" id="f-img-btn">Fazer upload</button>
+        <input class="form-control" id="f-image_url" value="${esc(v.image_url||'')}" placeholder="URL da imagem" style="flex:1;min-width:200px">
+        <img id="f-img-preview" class="upload-preview ${v.image_url?'':'hidden'}" src="${v.image_url||''}">
+      </div>
+    </div>
+    <div class="form-group full"><label class="form-label">Descrição</label><textarea class="form-control" id="f-description" rows="4">${esc(v.description||'')}</textarea></div>
+    <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:4px">
+      <label class="form-check"><input type="checkbox" id="f-active" ${v.active?'checked':''}><span class="form-check-label">Ativo</span></label>
+    </div>
+  </div>`;
+}
+
+async function saveProdutos(item) {
+  const payload = {
+    name: val('f-name'), category: val('f-category'), order_index: intVal('f-order_index'),
+    image_url: val('f-image_url'), description: val('f-description'),
+    active: document.getElementById('f-active').checked
+  };
+  if (item?.id) {
+    const { error } = await sb.from('produtos').update(payload).eq('id', item.id);
+    if (error) throw error;
+  } else {
+    const { error } = await sb.from('produtos').insert(payload);
+    if (error) throw error;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// PROGRESSO DA OBRA
+// ═══════════════════════════════════════════════
+let progressoItems = [];
+
+async function loadProgresso() {
+  const container = document.getElementById('progresso-list');
+  container.innerHTML = `<div class="loading-state"><span class="spinner spinner-dark"></span> Carregando...</div>`;
+  const { data, error } = await sb.from('obra_progresso').select('*').order('order_index');
+  if (error) { container.innerHTML = `<div class="empty-state">${error.message}</div>`; return; }
+  progressoItems = data || [];
+  if (!progressoItems.length) {
+    container.innerHTML = `<div class="empty-state"><p>Nenhum item de progresso cadastrado. Adicione itens na tabela obra_progresso.</p></div>`;
+    return;
+  }
+  container.innerHTML = progressoItems.map((item, i) => `
+    <div class="progress-item">
+      <div class="progress-name">${esc(item.name||item.title||'Item '+i)}</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pbar-${item.id}" style="width:${item.percentage||0}%"></div></div>
+      <input class="progress-input" id="pinput-${item.id}" type="number" min="0" max="100" value="${item.percentage||0}"
+        oninput="document.getElementById('pbar-${item.id}').style.width=this.value+'%';document.getElementById('ppct-${item.id}').textContent=this.value+'%'">
+      <div class="progress-pct" id="ppct-${item.id}">${item.percentage||0}%</div>
+    </div>`).join('');
+}
+
+async function saveProgresso() {
+  if (!progressoItems.length) { toast('Nada para salvar.', 'info'); return; }
+  const updates = progressoItems.map(item => {
+    const input = document.getElementById(`pinput-${item.id}`);
+    const pct = input ? parseInt(input.value) || 0 : item.percentage;
+    return sb.from('obra_progresso').update({ percentage: pct }).eq('id', item.id);
+  });
+  try {
+    await Promise.all(updates);
+    toast('Progresso salvo com sucesso!', 'success');
+  } catch(e) {
+    toast(e.message || 'Erro ao salvar', 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════
+// FOTOS DA OBRA
+// ═══════════════════════════════════════════════
+async function loadFotos() {
+  const grid = document.getElementById('fotos-grid');
+  grid.innerHTML = `<div class="loading-state" style="grid-column:1/-1"><span class="spinner spinner-dark"></span> Carregando...</div>`;
+  const { data, error } = await sb.from('obra_fotos').select('*').order('order_index');
+  if (error) { grid.innerHTML = `<div class="empty-state">${error.message}</div>`; return; }
+  if (!data.length) { grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><p>Nenhuma foto cadastrada.</p></div>`; return; }
+  grid.innerHTML = data.map(f => `
+    <div class="photo-card">
+      <img src="${esc(f.image_url||'')}" alt="${esc(f.caption||'')}" onerror="this.style.background='#edeae2'">
+      <div class="photo-card-body">
+        <div class="photo-caption">${esc(f.caption||'Sem legenda')}</div>
+        <div class="photo-order">Ordem: ${f.order_index??0}</div>
+        <button class="btn btn-danger btn-xs" onclick="confirmDelete('fotos',${f.id},'foto')">Excluir</button>
+      </div>
+    </div>`).join('');
+}
+
+async function addFoto() {
+  const image_url = document.getElementById('fotos-image-url').value.trim();
+  const caption = document.getElementById('fotos-caption').value.trim();
+  const order_index = parseInt(document.getElementById('fotos-order').value) || 0;
+  if (!image_url) { toast('Faça upload de uma imagem primeiro.', 'error'); return; }
+  const { error } = await sb.from('obra_fotos').insert({ image_url, caption, order_index });
+  if (error) { toast(error.message, 'error'); return; }
+  toast('Foto adicionada!', 'success');
+  document.getElementById('fotos-image-url').value = '';
+  document.getElementById('fotos-caption').value = '';
+  document.getElementById('fotos-order').value = '0';
+  document.getElementById('fotos-preview').classList.add('hidden');
+  loadFotos();
+}
+
+// ═══════════════════════════════════════════════
+// GENERIC FORM HELPERS
+// ═══════════════════════════════════════════════
+function buildModalForm(panel, item) {
+  switch(panel) {
+    case 'banners':     return buildBannersForm(item);
+    case 'blog':        return buildBlogForm(item);
+    case 'vagas':       return buildVagasForm(item);
+    case 'videos':      return buildVideosForm(item);
+    case 'depoimentos': return buildDepoimentosForm(item);
+    case 'produtos':    return buildProdutosForm(item);
+    default: return '<p>Formulário não encontrado.</p>';
+  }
+}
+
+// After modal body renders, wire up upload buttons
+const _origOpenModal = openModal;
+function openModal(panel, item = null) {
+  modalContext = { panel, item };
+  document.getElementById('modal-title').textContent = item ? 'Editar' : 'Novo';
+  document.getElementById('modal-body').innerHTML = buildModalForm(panel, item);
+  document.getElementById('modal-overlay').classList.remove('hidden');
+  document.getElementById('save-spinner').classList.add('hidden');
+  document.getElementById('btn-save-modal').disabled = false;
+  // Wire upload for forms that have f-img-file
+  const imgFileInput = document.getElementById('f-img-file');
+  if (imgFileInput) {
+    const imgBtn = document.getElementById('f-img-btn');
+    if (imgBtn) imgBtn.onclick = () => imgFileInput.click();
+    imgFileInput.onchange = async () => {
+      const file = imgFileInput.files[0];
+      if (!file) return;
+      const origText = imgBtn.textContent;
+      imgBtn.disabled = true; imgBtn.textContent = 'Enviando...';
+      try {
+        const url = await uploadImage(file);
+        // Find the right hidden url input
+        const urlInput = document.getElementById('f-image_url') ||
+                         document.getElementById('f-thumbnail_url') ||
+                         document.getElementById('f-avatar_url');
+        if (urlInput) urlInput.value = url;
+        const prev = document.getElementById('f-img-preview');
+        if (prev) { prev.src = url; prev.classList.remove('hidden'); }
+        toast('Imagem enviada!', 'success');
+      } catch(e) { toast(e.message, 'error'); }
+      imgBtn.disabled = false; imgBtn.textContent = origText;
+    };
+  }
+}
+
+async function saveItem(panel, item) {
+  switch(panel) {
+    case 'banners':     return saveBanners(item);
+    case 'blog':        return saveBlog(item);
+    case 'vagas':       return saveVagas(item);
+    case 'videos':      return saveVideos(item);
+    case 'depoimentos': return saveDepoimentos(item);
+    case 'produtos':    return saveProdutos(item);
+    default: throw new Error('Painel desconhecido: ' + panel);
+  }
+}
+
+const tableMap = {
+  banners: 'banners', blog: 'blog_posts', vagas: 'vagas',
+  videos: 'videos', depoimentos: 'depoimentos', produtos: 'produtos'
+};
+
+async function editItem(panel, id) {
+  const table = tableMap[panel];
+  if (!table) return;
+  const { data, error } = await sb.from(table).select('*').eq('id', id).single();
+  if (error) { toast(error.message, 'error'); return; }
+  openModal(panel, data);
+}
+
+// ═══════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════
+function esc(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+function intVal(id) {
+  return parseInt(val(id)) || 0;
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('pt-BR');
+}
+function fmtDateTime(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleString('pt-BR');
+}
+function loadingRow(cols) {
+  return `<tr><td colspan="${cols}" class="loading-state"><span class="spinner spinner-dark"></span> Carregando...</td></tr>`;
+}
+function errorRow(cols, msg) {
+  return `<tr><td colspan="${cols}" class="empty-state"><p style="color:#dc2626">${esc(msg)}</p></td></tr>`;
+}
+function emptyRow(cols) {
+  return `<tr><td colspan="${cols}" class="empty-state"><p>Nenhum registro encontrado.</p></td></tr>`;
+}
+
+function candBadge(status) {
+  const map = {
+    novo: ['badge-blue','Novo'],
+    analise: ['badge-yellow','Em análise'],
+    aprovado: ['badge-green','Aprovado'],
+    reprovado: ['badge-red','Reprovado'],
+    arquivado: ['badge-gray','Arquivado']
+  };
+  const [cls, label] = map[status] || ['badge-gray', status || '—'];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+function blogStatusBadge(status) {
+  return status === 'published'
+    ? '<span class="badge badge-green">Publicado</span>'
+    : '<span class="badge badge-yellow">Rascunho</span>';
+}
+function vagaStatusBadge(status) {
+  const map = {published:'badge-green',draft:'badge-yellow',closed:'badge-gray'};
+  const labels = {published:'Publicada',draft:'Rascunho',closed:'Encerrada'};
+  return `<span class="badge ${map[status]||'badge-gray'}">${labels[status]||status||'—'}</span>`;
+}
+
+// ═══════════════════════════════════════════════
+// KEYBOARD
+// ═══════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (!document.getElementById('confirm-popup').classList.contains('hidden')) closeConfirm();
+    else if (!document.getElementById('modal-overlay').classList.contains('hidden')) closeModal();
+  }
+});
+
+// ═══════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════
+initAuth();
+</script>
+</body>
+</html>
