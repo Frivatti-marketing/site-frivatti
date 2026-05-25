@@ -66,19 +66,26 @@ button{border:none;cursor:pointer;font-family:inherit}
 
 /* ══ 1. HERO / BANNER ══ */
 #hero{position:relative;height:100vh;min-height:700px;display:flex;align-items:center;background:#111;overflow:hidden}
-.hbg{position:absolute;inset:0;
-  background-image:url('https://images.unsplash.com/photo-1569597867579-d442f4a37a34?w=1800&q=85');
-  background-size:cover;background-position:center 45%;
-  opacity:.4;animation:hz 16s ease-in-out infinite alternate}
+.hbg{position:absolute;inset:0;background-size:cover;background-position:center 45%;opacity:.4;animation:hz 16s ease-in-out infinite alternate;transition:background-image .8s ease}
 @keyframes hz{from{transform:scale(1.03)}to{transform:scale(1.07)}}
 .hov{position:absolute;inset:0;background:linear-gradient(140deg,rgba(26,26,22,.92) 0%,rgba(26,26,22,.5) 55%,rgba(232,90,10,.1) 100%)}
-.hcnt{position:relative;z-index:2;padding-top:70px;max-width:800px}
+.hcnt{position:relative;z-index:2;padding-top:70px;max-width:800px;transition:opacity .4s ease}
+.hcnt.fading{opacity:0}
 .hbadge{display:inline-flex;align-items:center;gap:10px;padding:5px 16px 5px 5px;border-radius:20px;background:rgba(232,90,10,.16);border:1px solid rgba(232,90,10,.3);margin-bottom:26px}
 .hbdot{width:22px;height:22px;border-radius:50%;background:var(--rv);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700}
 .hbadge span{font-size:12px;font-weight:500;color:rgba(255,255,255,.82);letter-spacing:.8px}
 .hh1{font-family:var(--fd);font-size:clamp(48px,6.2vw,88px);font-weight:800;letter-spacing:-2.5px;line-height:1.02;color:#fff;margin-bottom:20px}
 .hh1 em{font-style:normal;color:var(--rv)}
 .hp{font-size:17px;color:rgba(255,255,255,.58);line-height:1.75;max-width:540px;margin-bottom:18px}
+/* carousel dots */
+.hd{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10}
+.hd-i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);border:none;cursor:pointer;transition:all .25s;padding:0}
+.hd-i.on{background:#fff;width:24px;border-radius:4px}
+/* carousel arrows */
+.harr{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px)}
+.harr:hover{background:rgba(232,90,10,.6);border-color:var(--r)}
+.harr.lft{left:28px}
+.harr.rgt{right:28px}
 
 /* produto pills */
 .hpills{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:36px}
@@ -446,17 +453,18 @@ button{border:none;cursor:pointer;font-family:inherit}
   1. HERO — BANNER
 ══════════════════════════════════ -->
 <section id="hero">
-  <div class="hbg"></div>
+  <div class="hbg" id="hbg" style="background-image:url('https://images.unsplash.com/photo-1569597867579-d442f4a37a34?w=1800&q=85')"></div>
   <div class="hov"></div>
+  <button class="harr lft" id="harr-l" onclick="hMove(-1)" style="display:none">&#8592;</button>
+  <button class="harr rgt" id="harr-r" onclick="hMove(1)" style="display:none">&#8594;</button>
   <div class="W">
-    <div class="hcnt">
+    <div class="hcnt" id="hcnt">
       <div class="hbadge">
         <div class="hbdot">✦</div>
         <span>Paraná — Suinocultura com padrão de exportação</span>
       </div>
       <h1 class="hh1">Qualidade que<br>nasce <em>no campo</em></h1>
       <p class="hp">Da suinocultura sustentável ao produto final com rastreabilidade completa. Mais de 30 anos cultivando parcerias sólidas no agronegócio paranaense.</p>
-      <!-- pills de produto -->
       <div class="hpills">
         <span class="hpill on">Todos os produtos</span>
         <span class="hpill">Cortes suínos</span>
@@ -464,11 +472,12 @@ button{border:none;cursor:pointer;font-family:inherit}
         <span class="hpill">Linha Export</span>
       </div>
       <div class="hacts">
-        <a class="btn bp" href="#" onclick="gs('#prods-det')">Ver produtos</a>
-        <a class="btn bo2" href="#" onclick="gs('#expo')">Exportação internacional</a>
+        <a class="btn bp" id="hcta1" href="#" onclick="gs('#expo')">Ver produtos</a>
+        <a class="btn bo2" id="hcta2" href="#" onclick="gs('#expo')">Exportação internacional</a>
       </div>
     </div>
   </div>
+  <div class="hd" id="hdots"></div>
   <div class="hscr"><div class="hsbar"></div><span>scroll</span></div>
 </section>
 
@@ -1038,7 +1047,62 @@ async function loadObra() {
   }, 100);
 }
 
+/* ── BANNER CAROUSEL ── */
+let _banners=[], _bIdx=0, _bTimer=null;
+
+function hRender(b){
+  const cnt=document.getElementById('hcnt');
+  cnt.classList.add('fading');
+  setTimeout(()=>{
+    document.getElementById('hbg').style.backgroundImage = b.image_url ? `url('${b.image_url}')` : "url('https://images.unsplash.com/photo-1569597867579-d442f4a37a34?w=1800&q=85')";
+    if(b.badge_text){
+      cnt.querySelector('.hbadge').style.display='inline-flex';
+      cnt.querySelector('.hbadge span').textContent=b.badge_text;
+    } else {
+      cnt.querySelector('.hbadge').style.display='none';
+    }
+    const h1=cnt.querySelector('.hh1');
+    h1.innerHTML=b.title||'Qualidade que<br>nasce <em>no campo</em>';
+    cnt.querySelector('.hp').textContent=b.subtitle||'';
+    const c1=document.getElementById('hcta1'), c2=document.getElementById('hcta2');
+    if(b.cta_primary_text){c1.style.display='inline-flex';c1.textContent=b.cta_primary_text;c1.href=b.cta_primary_url||'#';}else{c1.style.display='none';}
+    if(b.cta_secondary_text){c2.style.display='inline-flex';c2.textContent=b.cta_secondary_text;c2.href=b.cta_secondary_url||'#';}else{c2.style.display='none';}
+    cnt.classList.remove('fading');
+  },400);
+  document.querySelectorAll('.hd-i').forEach((d,i)=>d.classList.toggle('on',i===_bIdx));
+}
+
+function hMove(dir){
+  _bIdx=(_bIdx+dir+_banners.length)%_banners.length;
+  hRender(_banners[_bIdx]);
+  hResetTimer();
+}
+
+function hResetTimer(){
+  clearInterval(_bTimer);
+  if(_banners.length>1) _bTimer=setInterval(()=>hMove(1), 6000);
+}
+
+async function loadBanners(){
+  const {data}=await _sb.from('banners').select('*').eq('active',true).order('order_index');
+  if(!data||!data.length) return; // keep static default
+  _banners=data;
+  _bIdx=0;
+  // show arrows & dots only when multiple banners
+  if(data.length>1){
+    document.getElementById('harr-l').style.display='flex';
+    document.getElementById('harr-r').style.display='flex';
+    const dots=document.getElementById('hdots');
+    dots.innerHTML=data.map((_,i)=>`<button class="hd-i${i===0?' on':''}" onclick="hMove(${i}-_bIdx)"></button>`).join('');
+    // rebuild dots with proper click handlers
+    dots.innerHTML=data.map((_,i)=>`<button class="hd-i${i===0?' on':''}" onclick="_bIdx=${i};hRender(_banners[${i}]);hResetTimer()"></button>`).join('');
+  }
+  hRender(data[0]);
+  hResetTimer();
+}
+
 /* Init */
+loadBanners();
 loadVagas();
 loadDepoimentos();
 loadVideos();
