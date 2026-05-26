@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Frivatti — Do campo à mesa</title>
+  <!-- Security headers -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://dfnmsgjsglsujwvmjqdw.supabase.co https://dfnmsgjsglsujwvmjqdw.supabase.in https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com https://i.pravatar.cc; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; connect-src 'self' https://dfnmsgjsglsujwvmjqdw.supabase.co https://dfnmsgjsglsujwvmjqdw.supabase.in; frame-src https://www.youtube.com https://player.vimeo.com; media-src 'self' https:;">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
@@ -882,7 +887,7 @@ button{border:none;cursor:pointer;font-family:inherit}
 <!-- WA -->
 <a id="wa" href="https://wa.me/5545999990000" target="_blank"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 <script>
 /* NAV */
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>60));
@@ -925,24 +930,56 @@ async function subC() {
   const sel = document.getElementById('cvg');
   const vaga_title = sel ? sel.options[sel.selectedIndex].text : '';
   const vaga_id = sel && sel.value && sel.value !== 'produtor' && sel.value !== '' ? sel.value : null;
-  const inputs = document.querySelectorAll('#cmbd input, #cmbd textarea');
-  let name='',email='',phone='',city='',cover_letter='';
-  inputs.forEach(inp => {
-    if (inp.type==='text' && !name) name=inp.value;
-    else if (inp.type==='email') email=inp.value;
-    else if (inp.type==='tel') phone=inp.value;
-    else if (inp.type==='text') city=inp.value;
-    else if (inp.tagName==='TEXTAREA') cover_letter=inp.value;
-  });
+
+  // Collect fields by id for precision
+  const nameEl   = document.querySelector('#cmbd input[type="text"]');
+  const emailEl  = document.querySelector('#cmbd input[type="email"]');
+  const phoneEl  = document.querySelector('#cmbd input[type="tel"]');
+  const cityEls  = document.querySelectorAll('#cmbd input[type="text"]');
+  const taEl     = document.querySelector('#cmbd textarea');
+  const name         = nameEl  ? nameEl.value.trim()  : '';
+  const email        = emailEl ? emailEl.value.trim() : '';
+  const phone        = phoneEl ? phoneEl.value.trim() : '';
+  const city         = cityEls.length > 1 ? cityEls[1].value.trim() : '';
+  const cover_letter = taEl    ? taEl.value.trim()    : '';
+
+  // Client-side validation
+  if (!name) { alert('Por favor, informe seu nome completo.'); return; }
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRe.test(email)) { alert('Por favor, informe um e-mail válido.'); return; }
+  if (!phone) { alert('Por favor, informe seu telefone/WhatsApp.'); return; }
+
+  // Disable button to prevent double-submit
+  const btn = document.querySelector('#cmbd .btn.bp');
+  if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
+
   let cv_url = '';
   const fi = document.getElementById('fi');
   if (fi && fi.files[0]) {
     const file = fi.files[0];
-    const { data: up } = await _sb.storage.from('media').upload('curriculos/' + Date.now() + '_' + file.name, file);
+    // Validate file type and size (max 5MB)
+    const allowed = ['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowed.includes(file.type)) { alert('Formato de arquivo inválido. Use PDF, DOC ou DOCX.'); if(btn){btn.disabled=false;btn.textContent='Enviar candidatura';} return; }
+    if (file.size > 5 * 1024 * 1024) { alert('O arquivo não pode ultrapassar 5 MB.'); if(btn){btn.disabled=false;btn.textContent='Enviar candidatura';} return; }
+    const { data: up, error: upErr } = await _sb.storage.from('media').upload('curriculos/' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9._-]/g,'_'), file);
     if (up) { const { data: pub } = _sb.storage.from('media').getPublicUrl(up.path); cv_url = pub.publicUrl; }
+    // upErr is non-fatal — continue without CV URL
   }
-  await _sb.from('candidatos').insert({ vaga_id, vaga_title, name, email, phone, city, cover_letter, cv_url });
-  document.getElementById('cmbd').style.display='none';
+
+  const { error } = await _sb.from('candidatos').insert({
+    vaga_id, vaga_title, name, email, phone, city, cover_letter, cv_url,
+    status: 'novo'  // always force status=novo on insert
+  });
+
+  if (btn) { btn.disabled = false; btn.textContent = 'Enviar candidatura'; }
+
+  if (error) {
+    alert('Erro ao enviar candidatura. Tente novamente em instantes.');
+    console.error('Candidatura error:', error.message);
+    return;
+  }
+
+  document.getElementById('cmbd').style.display = 'none';
   document.getElementById('csucc').classList.add('sh');
 }
 function ufn(i){const d=document.getElementById('fn');if(i.files[0]){d.style.display='block';d.textContent='📎 '+i.files[0].name;}}
@@ -1023,10 +1060,13 @@ async function loadVideos() {
   const { data } = await _sb.from('videos').select('*').eq('status','published').order('order_index');
   if (!data || !data.length) return;
   el.innerHTML = data.map((v,i) => `
-    <div class="vc fu" style="transition-delay:${i*0.1}s" onclick="openVid('${v.title.replace(/'/g,"\\'")}','${v.video_url||''}')">
+    <div class="vc fu" style="transition-delay:${i*0.1}s" data-title="${v.title.replace(/"/g,'&quot;')}" data-url="${(v.video_url||'').replace(/"/g,'%22')}">
       <div class="vth"><img src="${v.thumbnail_url||''}" alt="${v.title}" loading="lazy"><div class="vpl"><div class="vpb"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>${v.duration?`<div class="vdu">${v.duration}</div>`:''}</div>
       <div class="vbd"><div class="vcat">${v.category||''}</div><h4>${v.title}</h4><p>${v.description||''}</p></div>
     </div>`).join('');
+  document.querySelectorAll('#videos-grid .vc').forEach(card => {
+    card.addEventListener('click', () => openVid(card.dataset.title, card.dataset.url));
+  });
   document.querySelectorAll('#videos-grid .fu').forEach(el => io.observe(el));
 }
 

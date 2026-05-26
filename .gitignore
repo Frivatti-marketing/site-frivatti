@@ -1,0 +1,9 @@
+﻿# Arquivos sensíveis — nunca commitar
+schema.sql
+*.sql
+.env
+.env.*
+*.env
+
+# Claude local
+.claude/
